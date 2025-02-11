@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/Tests/Tests.csproj": {}
+    "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/Tests/Tests.csproj": {}
   },
   "projects": {
-    "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj": {
+    "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj",
+        "projectUniqueName": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj",
         "projectName": "mini_hw1",
-        "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj",
+        "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj",
         "packagesPath": "/Users/vadimzenin/.nuget/packages/",
-        "outputPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/obj/",
+        "outputPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/vadimzenin/.nuget/NuGet/NuGet.Config"
@@ -67,14 +67,14 @@
         }
       }
     },
-    "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/Tests/Tests.csproj": {
+    "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/Tests/Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/Tests/Tests.csproj",
+        "projectUniqueName": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/Tests/Tests.csproj",
         "projectName": "Tests",
-        "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/Tests/Tests.csproj",
+        "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/Tests/Tests.csproj",
         "packagesPath": "/Users/vadimzenin/.nuget/packages/",
-        "outputPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/Tests/obj/",
+        "outputPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/vadimzenin/.nuget/NuGet/NuGet.Config"
@@ -89,8 +89,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj": {
-                "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj"
+              "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj": {
+                "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj"
               }
             }
           }

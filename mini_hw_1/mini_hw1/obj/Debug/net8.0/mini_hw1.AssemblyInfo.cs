@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mini_hw1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+79d064d6da4be3572b901734a2d61d513aba6000")]
 [assembly: System.Reflection.AssemblyProductAttribute("mini_hw1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mini_hw1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pNmFop1SR4GdZfGCakPLai19PgTfKiuK/y76p3MqhgpmyLSA0RBBdfyqZNFO92CqIVaDXB/zKTsvWdUlZP6Pig==",
+  "dgSpecHash": "XYGO5ZCFQZtpqM69uak8Lb4e5yIRo78YuXzDv8tDjyq9dG6gn/q7Jw2TJ+HJ77pseUCOIPIAppt/hBPqZy+flQ==",
   "success": true,
-  "projectFilePath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj",
+  "projectFilePath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj",
   "expectedPackageFiles": [
     "/Users/vadimzenin/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.1/microsoft.extensions.dependencyinjection.9.0.1.nupkg.sha512",
     "/Users/vadimzenin/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.1/microsoft.extensions.dependencyinjection.abstractions.9.0.1.nupkg.sha512",

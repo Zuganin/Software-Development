@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qbe9SXyNda2QHqVYot/hHPkxK7/HRz2+9buYY8u6qEFgGdQKj+y/hBObG1pS9/In37+xZvDWG7TiNVlughZvqA==",
+  "dgSpecHash": "676lK+9Qkt0WxP7XfsiH2ncVdZc00KceKqwCOf/fkZuYGSdmH81+s6eq6OJZSF339LC/8sz8GJmXj1yfZ25JHA==",
   "success": true,
-  "projectFilePath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/Tests/Tests.csproj",
+  "projectFilePath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/Tests/Tests.csproj",
   "expectedPackageFiles": [
     "/Users/vadimzenin/.nuget/packages/castle.core/5.1.1/castle.core.5.1.1.nupkg.sha512",
     "/Users/vadimzenin/.nuget/packages/coverlet.collector/6.0.0/coverlet.collector.6.0.0.nupkg.sha512",

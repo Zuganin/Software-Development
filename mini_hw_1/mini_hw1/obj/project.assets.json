@@ -145,11 +145,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj",
+      "projectUniqueName": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj",
       "projectName": "mini_hw1",
-      "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj",
+      "projectPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/mini_hw1.csproj",
       "packagesPath": "/Users/vadimzenin/.nuget/packages/",
-      "outputPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/obj/",
+      "outputPath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw_1/mini_hw1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/vadimzenin/.nuget/NuGet/NuGet.Config"
