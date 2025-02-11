@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "pNmFop1SR4GdZfGCakPLai19PgTfKiuK/y76p3MqhgpmyLSA0RBBdfyqZNFO92CqIVaDXB/zKTsvWdUlZP6Pig==",
+  "success": true,
+  "projectFilePath": "/Users/vadimzenin/RiderProjects/КПО/mini_hw1/mini_hw1/mini_hw1.csproj",
+  "expectedPackageFiles": [
+    "/Users/vadimzenin/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.1/microsoft.extensions.dependencyinjection.9.0.1.nupkg.sha512",
+    "/Users/vadimzenin/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.1/microsoft.extensions.dependencyinjection.abstractions.9.0.1.nupkg.sha512",
+    "/Users/vadimzenin/.nuget/packages/spectre.console/0.49.2-preview.0.74/spectre.console.0.49.2-preview.0.74.nupkg.sha512"
+  ],
+  "logs": []
+}
