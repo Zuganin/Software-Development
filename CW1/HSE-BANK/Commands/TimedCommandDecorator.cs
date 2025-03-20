@@ -5,9 +5,9 @@ namespace HSE_BANK.Commands;
 
 public class TimedCommandDecorator : ICommands
 {
-    private readonly ICommands _command;
+    private static ICommands _command;
 
-    public TimedCommandDecorator(ICommands command)
+    public void SetCommand(ICommands command)
     {
         _command = command;
     }

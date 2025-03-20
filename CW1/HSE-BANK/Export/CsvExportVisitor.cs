@@ -39,23 +39,34 @@ public class CsvExportVisitor : IExportVisitor
     
     public void Close()
     {
-        // Экспорт BankAccounts
-        using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "bankAccounts.csv")))
-        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+        if (_bankAccounts != null || _bankAccounts.Any())
         {
-            csv.WriteRecords(_bankAccounts);
+            // Экспорт BankAccounts
+            using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "bankAccounts.csv")))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(_bankAccounts);
+            }
         }
-        // Экспорт Categories
-        using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "categories.csv")))
-        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+
+        if (_categories != null || _categories.Any())
         {
-            csv.WriteRecords(_categories);
+            // Экспорт Categories
+            using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "categories.csv")))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(_categories);
+            }
         }
-        // Экспорт Operations
-        using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "operations.csv")))
-        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+
+        if (_operations != null || _operations.Any())
         {
-            csv.WriteRecords(_operations);
+            // Экспорт Operations
+            using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "operations.csv")))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(_operations);
+            }
         }
     }
 

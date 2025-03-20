@@ -2,13 +2,13 @@ namespace HSE_BANK.Import;
 
 public abstract class DataImporter<T>
 {
-    public List<T> ImportData(string filePath)
+    public List<T>? ImportData(string filePath)
     {
         string fileContent = ReadFile(filePath);
         
+        if(fileContent == "")
+            return null;
         List<T> data = ParseData(fileContent);
-        
-        SaveData(data);
         
         return data;
     }
@@ -20,10 +20,5 @@ public abstract class DataImporter<T>
 
 
     protected abstract List<T> ParseData(string fileContent);
-
-
-    protected virtual void SaveData(List<T> data)
-    {
-        Console.WriteLine($"Импортировано {data.Count} элементов.");
-    }
+    
 }

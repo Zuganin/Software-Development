@@ -5,6 +5,7 @@ using HSE_BANK.Export;
 using HSE_BANK.Facades;
 using HSE_BANK.Factories;
 using HSE_BANK.Infrastructure;
+using HSE_BANK.Interfaces.Command;
 using HSE_BANK.Interfaces.Export;
 using HSE_BANK.Interfaces.IFactories;
 using HSE_BANK.Interfaces.Repository;
@@ -22,6 +23,12 @@ public static class DIContainer
         var services = new ServiceCollection();
         
         services.AddMemoryCache();
+
+        services.AddSingleton<ICommands, CreateBankAccountCommand>();
+        services.AddSingleton<ICommands, CreateCategoryCommand>();
+        services.AddSingleton<ICommands, CreateOperationCommand>();
+
+        services.AddSingleton<TimedCommandDecorator>();
 
         services.AddSingleton<IExportVisitor, CsvExportVisitor>();
         services.AddSingleton<IExportVisitor, JsonExportVisitor>();

@@ -1,4 +1,5 @@
 using System.Data.Common;
+using HSE_BANK.Commands;
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
 using HSE_BANK.Export;
@@ -15,6 +16,7 @@ public class Menu
     private static ICategoryFacade _categoryFacade;
     private static IOperationFacade _operationFacade;
     private static Exporter _exporter;
+    private static TimedCommandDecorator _timedCommandDecorator;
     
     public Menu(IAnalysis analysisFacade, IBankAccountFacade bankAccountFacade, ICategoryFacade categoryFacade, IOperationFacade operationFacade, Exporter exporter)
     {
@@ -70,7 +72,10 @@ public class Menu
         {
             case "Добавить счет":
                 var name = AnsiConsole.Ask<string>("Введите название счета:");
-                _bankAccountFacade.CreateBankAccount(name);
+                CreateBankAccountCommand createBankAccountCommand = new(_bankAccountFacade);
+                createBankAccountCommand.Create(name, 0);
+                _timedCommandDecorator.SetCommand(createBankAccountCommand);
+                _timedCommandDecorator.Execute();
                 AnsiConsole.MarkupLine("[green]Счет добавлен![/]");
                 break;
             case "Удалить счет":
@@ -105,7 +110,10 @@ public class Menu
                 var type = AnsiConsole.Prompt(new SelectionPrompt<CategoryType>()
                     .Title("Выберите тип категории:")
                     .AddChoices(_categoryFacade.GetAllCategoryTypes()));
-                _categoryFacade.CreateCategory(name, type);
+                CreateCategoryCommand createCategoryCommand = new(_categoryFacade);
+                createCategoryCommand.Create(name, type);
+                _timedCommandDecorator.SetCommand(createCategoryCommand);
+                _timedCommandDecorator.Execute();
                 AnsiConsole.MarkupLine("[green]Категория добавлена![/]");
                 break;
             case "Удалить категорию":
@@ -155,8 +163,11 @@ public class Menu
                 var categoryType = AnsiConsole.Prompt(new SelectionPrompt<CategoryType>()
                     .Title("Выберите тип категории:")
                     .AddChoices(Enum.GetValues<CategoryType>().ToList()));
-                _operationFacade.CreateOperation(opType, account.Id, amount, description, DateTime.Now,
-                     categoryName,  categoryType);
+                CreateOperationCommand createOperationCommand = new(_operationFacade);
+                createOperationCommand.Create(opType, account.Id, amount, description, DateTime.Now,
+                    categoryName, categoryType);
+                _timedCommandDecorator.SetCommand(createOperationCommand);
+                _timedCommandDecorator.Execute();
                 AnsiConsole.MarkupLine("[green]Операция добавлена![/]");
                 break;
             case "Список операций":
@@ -234,7 +245,7 @@ public class Menu
 
     private static void ExportData()
     {
-        string path = AnsiConsole.Ask<string>("Введите путь к файлу:");
+        string path = AnsiConsole.Ask<string>("Введите путь к директории:");
         var format = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Выберите формат экспорта:")
@@ -258,92 +269,107 @@ public class Menu
 
     private static void ImportData()
     {
-        string path = AnsiConsole.Ask<string>("Введите путь к файлу:");
-        if (!File.Exists(path))
+        
+        string accountPath = AnsiConsole.Ask<string>("Введите путь к файлу с аккаунтами:");
+        if (!File.Exists(accountPath))
         {
-            AnsiConsole.MarkupLine("[red]Ошибка! Файл не найден.[/]");
-            return;
+            AnsiConsole.MarkupLine("[red]Ошибка! Файл с аккаунтами не найден и не будет прочитан.[/]");
+        }
+        string categoryPath = AnsiConsole.Ask<string>("Введите путь к файлу с категориями:");
+        if (!File.Exists(categoryPath))
+        {
+            AnsiConsole.MarkupLine("[red]Ошибка! Файл с категориями не найден и не будет прочитан.[/]");
+            
+        }
+        string operationPath = AnsiConsole.Ask<string>("Введите путь к файлу с операциями:");
+        if (!File.Exists(operationPath))
+        {
+            AnsiConsole.MarkupLine("[red]Ошибка! Файл с операциями не найден и не будет прочитан.[/]");
         }
         var format = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("Выберите формат экспорта:")
+                .Title("Выберите формат импорта:")
                 .AddChoices("CSV","JSON", "YAML"));
         
         switch (format)
         {
             case "CSV":
-                ImportCsv(path);
+                ImportCsv(accountPath,categoryPath,operationPath);
                 break;
             case "JSON":
-                ImportJson(path);
+                ImportJson(accountPath,categoryPath,operationPath);
                 break;
             case "YAML":
-                ImportYaml(path);
+                ImportYaml(accountPath,categoryPath,operationPath);
                 break;
         }
         
         AnsiConsole.MarkupLine("[green]Данные успешно импортированы![/]");
     }
+    
 
-    private static void ImportCsv(string path)
+
+    private static void ImportCsv(string accountPath, string categoryPath, string operationPath)
     {
         CsvImporter<BankAccount> csvBankAccountImporter = new();
-        var bankAccounts = csvBankAccountImporter.ImportData(path);
+        var bankAccounts = csvBankAccountImporter.ImportData(accountPath);
         foreach (var account in bankAccounts)
         {
             _bankAccountFacade.CreateBankAccount(account.Name);
         }
         CsvImporter<Category> csvCategoryImporter = new();
-        var categories = csvCategoryImporter.ImportData(path);
+        var categories = csvCategoryImporter.ImportData(categoryPath);
         foreach (var category in categories)
         {
             _categoryFacade.CreateCategory(category.Name, category.Type);
         }
         CsvImporter<Operation> csvOperationImporter = new();
-        var operations = csvOperationImporter.ImportData(path);
+        var operations = csvOperationImporter.ImportData(operationPath);
         foreach (var operation in operations)
         {
             _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount, operation.Description, operation.Date, operation.Category.Name, operation.Category.Type);
         }
     }
+    
 
-    private static void ImportJson(string path)
+    private static void ImportJson(string accountPath, string categoryPath, string operationPath) 
     {
         JsonImporter<BankAccount> csvBankAccountImporter = new();
-        var bankAccounts = csvBankAccountImporter.ImportData(path);
+        var bankAccounts = csvBankAccountImporter.ImportData(accountPath);
         foreach (var account in bankAccounts)
         {
             _bankAccountFacade.CreateBankAccount(account.Name);
         }
         JsonImporter<Category> csvCategoryImporter = new();
-        var categories = csvCategoryImporter.ImportData(path);
+        var categories = csvCategoryImporter.ImportData(categoryPath);
         foreach (var category in categories)
         {
             _categoryFacade.CreateCategory(category.Name, category.Type);
         }
         JsonImporter<Operation> csvOperationImporter = new();
-        var operations = csvOperationImporter.ImportData(path);
+        var operations = csvOperationImporter.ImportData(operationPath);
         foreach (var operation in operations)
         {
             _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount, operation.Description, operation.Date, operation.Category.Name, operation.Category.Type);
         }
     }
-    private static void ImportYaml(string path)
+    
+    private static void ImportYaml(string accountPath, string categoryPath, string operationPath) 
     {
         YamlImporter<BankAccount> csvBankAccountImporter = new();
-        var bankAccounts = csvBankAccountImporter.ImportData(path);
+        var bankAccounts = csvBankAccountImporter.ImportData(accountPath);
         foreach (var account in bankAccounts)
         {
             _bankAccountFacade.CreateBankAccount(account.Name);
         }
         YamlImporter<Category> csvCategoryImporter = new();
-        var categories = csvCategoryImporter.ImportData(path);
+        var categories = csvCategoryImporter.ImportData(categoryPath);
         foreach (var category in categories)
         {
             _categoryFacade.CreateCategory(category.Name, category.Type);
         }
         YamlImporter<Operation> csvOperationImporter = new();
-        var operations = csvOperationImporter.ImportData(path);
+        var operations = csvOperationImporter.ImportData(operationPath);
         foreach (var operation in operations)
         {
             _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount, operation.Description, operation.Date, operation.Category.Name, operation.Category.Type);

@@ -9,5 +9,6 @@ public enum CategoryType
     Education = 4,
     Hobbies = 5,  
     CommunalServices = 6,
-    Transactions = 7
+    Transactions = 7,
+    Medicine = 8,
 }

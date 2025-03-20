@@ -10,12 +10,12 @@ public class InMemoryBankAccountRepository : IBankAccountRepository
 
     public BankAccount GetByName(string name)
     {
-        return _bankAccounts.FirstOrDefault(_bankAccount => _bankAccount.Value.Name == name).Value;
+        return _bankAccounts.Values.FirstOrDefault(account => account.Name == name);
     }
 
     public BankAccount GetById(Guid id)
     {
-        return _bankAccounts.FirstOrDefault(_bankAccount => _bankAccount.Key == id).Value;
+        return _bankAccounts.Values.FirstOrDefault(account => account.Id == id);
     }
 
     public void Add(BankAccount category)

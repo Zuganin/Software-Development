@@ -41,8 +41,19 @@ public class YamlExportVisitor : IExportVisitor
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .Build();
             
-        File.WriteAllText(Path.Combine(_outputDirectory, "bankAccounts.yaml"), serializer.Serialize(_bankAccounts));
-        File.WriteAllText(Path.Combine(_outputDirectory, "categories.yaml"), serializer.Serialize(_categories));
-        File.WriteAllText(Path.Combine(_outputDirectory, "operations.yaml"), serializer.Serialize(_operations));
+        if (_bankAccounts != null || _bankAccounts.Any())
+        { 
+            File.WriteAllText(Path.Combine(_outputDirectory, "bankAccounts.yaml"), serializer.Serialize(_bankAccounts));
+        }
+
+        if (_categories != null || _categories.Any())
+        {
+            File.WriteAllText(Path.Combine(_outputDirectory, "categories.yaml"), serializer.Serialize(_categories));
+        }
+
+        if (_operations != null || _operations.Any())
+        {
+            File.WriteAllText(Path.Combine(_outputDirectory, "operations.yaml"), serializer.Serialize(_operations));
+        }
     }
 }

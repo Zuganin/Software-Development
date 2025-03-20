@@ -13,26 +13,28 @@ public class CreateOperationCommand : ICommands
     private decimal _amount;
     private DateTime _date;
     private string _description;
-    private Category _category;
+    private string _categoryName;
+    private CategoryType _categoryType;
     
     public CreateOperationCommand(IOperationFacade operationFacade)
     {
         _operationFacade = operationFacade;
     }
 
-    public void Create(OperationType operationType, Guid bankAccountId, decimal amount, DateTime date, string description, Category category)
+    public void Create(OperationType operationType, Guid bankAccountId, decimal amount,string description, DateTime date,  string categoryName, CategoryType categoryType)
     {
         _operationType = operationType;
         _bankAccountId = bankAccountId;
         _amount = amount;
         _date = date;
         _description = description;
-        _category = category;
+        _categoryName = categoryName;
+        _categoryType = categoryType;
     }
     
     public void Execute()
     {
-        _operationFacade.CreateOperation(_operationType, _bankAccountId, _amount, _description, _date, _category.Name, _category.Type);
+        _operationFacade.CreateOperation(_operationType, _bankAccountId, _amount, _description, _date, _categoryName, _categoryType);
     }
     
 }

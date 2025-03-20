@@ -38,11 +38,22 @@ public class JsonExportVisitor : IExportVisitor
     
     public void Close()
     {
-        File.WriteAllText(Path.Combine(_outputDirectory, "bankAccounts.json"),
-            JsonConvert.SerializeObject(_bankAccounts, Formatting.Indented));
-        File.WriteAllText(Path.Combine(_outputDirectory, "categories.json"),
-            JsonConvert.SerializeObject(_categories, Formatting.Indented));
-        File.WriteAllText(Path.Combine(_outputDirectory, "operations.json"),
-            JsonConvert.SerializeObject(_operations, Formatting.Indented));
+        if (_bankAccounts != null || _bankAccounts.Any())
+        {
+            File.WriteAllText(Path.Combine(_outputDirectory, "bankAccounts.json"),
+                JsonConvert.SerializeObject(_bankAccounts, Formatting.Indented));
+        }
+
+        if (_categories != null || _categories.Any())
+        {
+            File.WriteAllText(Path.Combine(_outputDirectory, "categories.json"),
+                JsonConvert.SerializeObject(_categories, Formatting.Indented));
+        }
+
+        if (_operations != null || _operations.Any())
+        {
+            File.WriteAllText(Path.Combine(_outputDirectory, "operations.json"),
+                JsonConvert.SerializeObject(_operations, Formatting.Indented));
+        }
     }
 }
