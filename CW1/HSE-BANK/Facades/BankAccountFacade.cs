@@ -11,7 +11,9 @@ public class BankAccountFacade : IBankAccountFacade
     
     public BankAccount CreateBankAccount(string name, decimal  amount)
     {
-        return _bankAccountFactory.CreateBankAccount(name, amount);
+        var account = _bankAccountFactory.CreateBankAccount(name, amount);
+        _bankAccountRepository.Add(account);
+        return account;
     }
 
     public BankAccount GetBankAccount(Guid id)

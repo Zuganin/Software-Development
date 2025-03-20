@@ -6,7 +6,7 @@ namespace HSE_BANK.Facades;
 
 public interface IOperationFacade
 {
-    Operation CreateOperation(OperationType type, BankAccount account, decimal amount, string description, DateTime date,
+    Operation CreateOperation(OperationType type, Guid accountId, decimal amount, string description, DateTime date,
         string categoryName, CategoryType categoryType);
 
     Operation GetOperationById(Guid id);

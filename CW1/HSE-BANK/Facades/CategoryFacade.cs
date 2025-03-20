@@ -11,7 +11,9 @@ public class CategoryFacade : ICategoryFacade
     private readonly ICategoryFactory _categoryFactory;
     public Category CreateCategory(string name, CategoryType type)
     {
-        return _categoryFactory.CreateCategory(name, type);
+        var category = _categoryFactory.CreateCategory(name, type);
+        _categoryRepository.Add(category);
+        return category;
     }
 
     public Category GetCategory(Guid id)

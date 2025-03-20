@@ -13,10 +13,10 @@ public class OperationFacade : IOperationFacade
     private readonly IOperationRepository _operationRepository;
     private readonly ICategoryRepository _categoryRepository;
 
-    public Operation CreateOperation(OperationType type, BankAccount account, decimal amount, string description, DateTime date,
+    public Operation CreateOperation(OperationType type, Guid accountId, decimal amount, string description, DateTime date,
         string categoryName, CategoryType categoryType)
     {
-        Operation operation = _operationFactory.CreateOperation(type, account.Id, amount, date, description, categoryName, categoryType, _categoryFactory);
+        Operation operation = _operationFactory.CreateOperation(type, accountId, amount, date, description, categoryName, categoryType, _categoryFactory);
         _operationRepository.Add(operation);
         _categoryRepository.Add(operation.Category);
         return  operation;
