@@ -9,7 +9,7 @@ public class BankAccountFacade : IBankAccountFacade
     private readonly IBankAccountFactory _bankAccountFactory;
     private readonly IBankAccountRepository _bankAccountRepository;
     
-    public BankAccount CreateBankAccount(string name, decimal  amount)
+    public BankAccount CreateBankAccount(string name, decimal  amount = 0)
     {
         var account = _bankAccountFactory.CreateBankAccount(name, amount);
         _bankAccountRepository.Add(account);
@@ -19,6 +19,15 @@ public class BankAccountFacade : IBankAccountFacade
     public BankAccount GetBankAccount(Guid id)
     {
         return _bankAccountRepository.GetById(id);
+    }
+    
+    public BankAccount GetBankAccount(string name)
+    {
+        return _bankAccountRepository.GetByName(name);
+    }
+    public IEnumerable<BankAccount> GetAllBankAccounts()
+    {
+        return _bankAccountRepository.GetAll();
     }
 
     public void UpdateBankAccount(BankAccount account)

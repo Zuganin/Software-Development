@@ -22,6 +22,11 @@ public class OperationFacade : IOperationFacade
         return  operation;
     }
     
+    public IEnumerable<Operation> GetAllOperations()
+    {
+        return _operationRepository.GetAll();
+    }
+    
     public Operation GetOperationById(Guid id)
     {
         return _operationRepository.GetById(id);

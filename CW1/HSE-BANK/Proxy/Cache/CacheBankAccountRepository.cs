@@ -55,7 +55,7 @@ public class CacheBankAccountRepository : IBankAccountRepository
     {
         if (_cache.TryGetValue(CacheAllAccountsKey , out IEnumerable<BankAccount>? accounts) && accounts != null)
         {
-            return accounts;
+            return accounts.ToList();
         }
         accounts = _realRepository.GetAll();
         var bankAccounts = accounts.ToList();

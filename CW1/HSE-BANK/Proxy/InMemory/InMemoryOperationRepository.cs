@@ -47,7 +47,7 @@ public class InMemoryOperationRepository : IOperationRepository
 
     public IEnumerable<Operation> GetAll()
     {
-        return _operations.Values;
+        return _operations.Values.ToList();
     }
     
 

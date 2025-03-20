@@ -4,7 +4,7 @@ namespace HSE_BANK.Facades;
 
 public interface IBankAccountFacade
 {
-    BankAccount CreateBankAccount(string name, decimal amount);
+    BankAccount CreateBankAccount(string name, decimal amount = 0);
     
     BankAccount GetBankAccount(Guid id);
     

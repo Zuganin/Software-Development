@@ -46,7 +46,7 @@ public class InMemoryCategoryRepository : ICategoryRepository
 
     public IEnumerable<Category> GetAll()
     {
-        return _categories.Values;
+        return _categories.Values.ToList();
     }
 
     public IEnumerable<Category> GetByType(CategoryType type)
@@ -55,9 +55,8 @@ public class InMemoryCategoryRepository : ICategoryRepository
             c.Value.Type == type).Select(c => c.Value).ToList();
     }
 
-    public IEnumerable<Category> GetByName(string name)
+    public Category GetByName(string name)
     {
-        return _categories.Where(c =>
-            c.Value.Name == name).Select(c => c.Value).ToList();
+        return _categories.First(c => c.Value.Name == name).Value;
     }
 }

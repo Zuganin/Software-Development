@@ -15,6 +15,13 @@ public class CacheOperationRepository : IOperationRepository
     private const string CacheOperationKey = "Operation:";
     
     private static readonly TimeSpan CacheLife = TimeSpan.FromMinutes(5);
+    
+    public CacheOperationRepository(IOperationRepository realRepository, IMemoryCache cache)
+    {
+        _realRepository = realRepository;
+        _cache = cache;
+    }
+    
     public Operation GetById(Guid id)
     {
         if (_cache.TryGetValue(CacheOperationKey + id, out Operation? operation) && operation != null)
@@ -49,7 +56,7 @@ public class CacheOperationRepository : IOperationRepository
     {
         if (_cache.TryGetValue(CacheAllOperationsKey, out IEnumerable<Operation>? operations) && operations != null)
         {
-            return operations;
+            return operations.ToList();
         }
         operations = _realRepository.GetAll();
         _cache.Set(CacheAllOperationsKey, operations, CacheLife);

@@ -1,3 +1,4 @@
+using System.Collections;
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
 using HSE_BANK.Interfaces.IFactories;
@@ -15,6 +16,19 @@ public class CategoryFacade : ICategoryFacade
         _categoryRepository.Add(category);
         return category;
     }
+    public IEnumerable<CategoryType> GetAllCategoryTypes()
+    {
+        return Enum.GetValues<CategoryType>().ToList();
+    }
+    public IEnumerable<Category> GetAllCategories()
+    {
+        return _categoryRepository.GetAll();
+    }
+    public Category GetCategory(string name)
+    {
+        return _categoryRepository.GetByName(name);
+    }
+    
 
     public Category GetCategory(Guid id)
     {

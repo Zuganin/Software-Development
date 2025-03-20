@@ -54,7 +54,7 @@ public class CacheCategoryRepository : ICategoryRepository
     {
         if(_cache.TryGetValue(CacheAllCategoriesKey, out IEnumerable<Category>? categories) && categories != null)
         {
-            return categories;
+            return categories.ToList();
         }
         categories = _realRepository.GetAll();
         _cache.Set(CacheAllCategoriesKey, categories, CacheLife);
@@ -68,9 +68,9 @@ public class CacheCategoryRepository : ICategoryRepository
         return categories.Where(c => c.Type == type);
     }
 
-    public IEnumerable<Category> GetByName(string name)
+    public Category GetByName(string name)
     {
         var categories = GetAll();
-        return categories.Where(c => c.Name == name);
+        return categories.First(c => c.Name == name);
     }
 }

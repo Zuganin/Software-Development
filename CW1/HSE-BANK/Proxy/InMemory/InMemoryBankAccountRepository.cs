@@ -52,6 +52,6 @@ public class InMemoryBankAccountRepository : IBankAccountRepository
 
     public IEnumerable<BankAccount> GetAll()
     {
-        return _bankAccounts.Values;
+        return _bankAccounts.Values.ToList();
     }
 }
