@@ -5,6 +5,6 @@ namespace HSE_BANK.Interfaces.Repository;
 
 public interface ICategoryRepository : IRepository<Category>
 {
-    Category GetByType(CategoryType type);
-    Category GetByName(string name);
+    IEnumerable<Category> GetByType(CategoryType type);
+    IEnumerable<Category> GetByName(string name);
 }

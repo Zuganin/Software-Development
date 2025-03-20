@@ -1,4 +1,6 @@
 using HSE_BANK.Domain_Models.Enums;
+using HSE_BANK.Factories;
+using HSE_BANK.Interfaces.IFactories;
 
 namespace HSE_BANK.Domain_Models;
 
@@ -10,9 +12,11 @@ public class Operation
     internal decimal Amount { get; private set; }
     internal DateTime Date { get; private set; }
     internal string Description { get; private set; }
-    internal CategoryType CategoryId { get; private set; }
     
-    internal Operation( OperationType type, Guid bankAccountId, decimal amount, DateTime date, string description, Category category)
+    internal Category Category { get; private set; }
+    
+    internal Operation( OperationType type, Guid bankAccountId, decimal amount, DateTime date, string description,
+         string categoryName, CategoryType categoryType, ICategoryFactory factory)
     {
         Id = Guid.NewGuid();
         Type = type;
@@ -20,7 +24,7 @@ public class Operation
         Amount = amount;
         Date = date;
         Description = description;
-        CategoryId = category.Type;
+        Category = factory.CreateCategory(categoryName, categoryType);
     }
     
     

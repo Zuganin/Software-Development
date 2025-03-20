@@ -83,7 +83,7 @@ public class CacheOperationRepository : IOperationRepository
     public IEnumerable<Operation> GetOperationsByCategoryType(CategoryType type)
     {
         var operations = GetAll();
-        return operations.Where(op => op.CategoryId == type);
+        return operations.Where(op => op.Category.Type == type);
     }
 
     

@@ -1,19 +1,19 @@
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
+using HSE_BANK.Factories;
 
 namespace HSE_BANK.Facades;
 
 public interface IOperationFacade
 {
-    int GetOperationId(Operation operation);
-    Operation GetOperationById(int id);
-    OperationType getOperationType(Operation operation);
+    Operation CreateOperation(OperationType type, BankAccount account, decimal amount, string description, DateTime date,
+        string categoryName, CategoryType categoryType);
+
+    Operation GetOperationById(Guid id);
     
-    // List<Operation> GetOperationsByAccountId(int accountId);
-    // List<Operation> GetOperationsByCategoryId(int categoryId);
-    // List<Operation> GetOperationsByDate(DateTime date);
-    // List<Operation> GetOperationsByType(OperationType type);
-    // List<Operation> GetOperationsByAmount(decimal amount);
-    // List<Operation> GetOperationsByDescription(string description);
+    void UpdateOperation(Operation operation);
+    
+    void DeleteOperation(Operation operation);
+
 
 }

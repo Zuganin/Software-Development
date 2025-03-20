@@ -6,7 +6,8 @@ namespace HSE_BANK.Factories;
 
 public class OperationFactory : IOperationFactory
 {
-    public Operation CreateOperation( OperationType type, Guid bankAccountId, decimal amount, DateTime date, string description, Category category)
+    public Operation CreateOperation( OperationType type, Guid bankAccountId, decimal amount, DateTime date, string description,
+         string categoryName, CategoryType categoryType, ICategoryFactory factory)
     {
         if( amount <=0  )
         {
@@ -16,6 +17,6 @@ public class OperationFactory : IOperationFactory
         {
             description = "Нет описания операции";  
         }
-        return new Operation( type, bankAccountId, amount, date, description, category);
+        return new Operation( type, bankAccountId, amount, date, description,  categoryName, categoryType, factory);
     }
 }

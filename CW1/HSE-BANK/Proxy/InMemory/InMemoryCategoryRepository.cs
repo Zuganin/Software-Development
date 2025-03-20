@@ -49,13 +49,15 @@ public class InMemoryCategoryRepository : ICategoryRepository
         return _categories.Values;
     }
 
-    public Category GetByType(CategoryType type)
+    public IEnumerable<Category> GetByType(CategoryType type)
     {
-        return _categories.FirstOrDefault(_category => _category.Value.Type == type).Value;
+        return _categories.Where(c =>
+            c.Value.Type == type).Select(c => c.Value).ToList();
     }
 
-    public Category GetByName(string name)
+    public IEnumerable<Category> GetByName(string name)
     {
-        return _categories.FirstOrDefault(_category => _category.Value.Name == name).Value;
+        return _categories.Where(c =>
+            c.Value.Name == name).Select(c => c.Value).ToList();
     }
 }

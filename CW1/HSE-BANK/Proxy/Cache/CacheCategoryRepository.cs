@@ -1,3 +1,4 @@
+using System.Collections;
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
 using HSE_BANK.Interfaces.Repository;
@@ -61,25 +62,15 @@ public class CacheCategoryRepository : ICategoryRepository
         return allCategories;
     }
 
-    public Category GetByType(CategoryType type)
+    public IEnumerable<Category> GetByType(CategoryType type)
     {
-        if (_cache.TryGetValue(CacheCategoryKey + type, out Category? category) && category != null)
-        {
-            return category;
-        }
-        category = _realRepository.GetByType(type);
-        _cache.Set(CacheCategoryKey + type, category, CacheLife);
-        return category;
+        var categories = GetAll();
+        return categories.Where(c => c.Type == type);
     }
 
-    public Category GetByName(string name)
+    public IEnumerable<Category> GetByName(string name)
     {
-        if (_cache.TryGetValue(CacheCategoryKey + name, out Category? category) && category != null)
-        {
-            return category;
-        }
-        category = _realRepository.GetByName(name);
-        _cache.Set(CacheCategoryKey + name, category, CacheLife);
-        return category;
+        var categories = GetAll();
+        return categories.Where(c => c.Name == name);
     }
 }

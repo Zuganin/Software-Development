@@ -8,6 +8,7 @@ namespace HSE_BANK.Proxy.InMemory;
 public class InMemoryOperationRepository : IOperationRepository
 {
     private Dictionary<Guid, Operation> _operations = new();
+
     public Operation GetById(Guid id)
     {
         return _operations[id];
@@ -59,7 +60,7 @@ public class InMemoryOperationRepository : IOperationRepository
     public IEnumerable<Operation> GetOperationsByCategoryType(CategoryType type)
     {
         var operations = GetAll();
-        return operations.Where(operation => operation.CategoryId == type);
+        return operations.Where(op => op.Category.Type == type);
     }
     
     public IEnumerable<Operation> GetOperationsByDate(DateTime start, DateTime end)
