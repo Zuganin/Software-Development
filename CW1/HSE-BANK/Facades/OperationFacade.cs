@@ -13,6 +13,14 @@ public class OperationFacade : IOperationFacade
     private readonly IOperationRepository _operationRepository;
     private readonly ICategoryRepository _categoryRepository;
 
+    public OperationFacade(IOperationFactory operationFactory, ICategoryFactory categoryFactory, IOperationRepository operationRepository, ICategoryRepository categoryRepository)
+    {
+        _operationFactory = operationFactory;
+        _categoryFactory = categoryFactory;
+        _operationRepository = operationRepository;
+        _categoryRepository = categoryRepository;
+    }
+    
     public Operation CreateOperation(OperationType type, Guid accountId, decimal amount, string description, DateTime date,
         string categoryName, CategoryType categoryType)
     {

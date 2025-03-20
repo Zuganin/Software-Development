@@ -4,8 +4,8 @@ using HSE_BANK.Factories;
 
 namespace HSE_BANK.Interfaces.IFactories;
 
-internal interface IOperationFactory
+public interface IOperationFactory
 {
-    internal Operation CreateOperation( OperationType type, Guid bankAccountId, decimal amount, DateTime date,
+    Operation CreateOperation( OperationType type, Guid bankAccountId, decimal amount, DateTime date,
         string description, string categoryName, CategoryType categoryType, ICategoryFactory factory);
 }

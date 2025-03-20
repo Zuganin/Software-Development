@@ -9,6 +9,11 @@ public class BankAccountFacade : IBankAccountFacade
     private readonly IBankAccountFactory _bankAccountFactory;
     private readonly IBankAccountRepository _bankAccountRepository;
     
+    public BankAccountFacade(IBankAccountFactory bankAccountFactory, IBankAccountRepository bankAccountRepository)
+    {
+        _bankAccountFactory = bankAccountFactory;
+        _bankAccountRepository = bankAccountRepository;
+    }
     public BankAccount CreateBankAccount(string name, decimal  amount = 0)
     {
         var account = _bankAccountFactory.CreateBankAccount(name, amount);

@@ -4,5 +4,5 @@ namespace HSE_BANK.Interfaces.IFactories;
 
 public interface IBankAccountFactory
 {
-    internal BankAccount CreateBankAccount( string name, decimal balance);
+    BankAccount CreateBankAccount( string name, decimal balance);
 }

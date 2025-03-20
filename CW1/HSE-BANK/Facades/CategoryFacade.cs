@@ -10,6 +10,12 @@ public class CategoryFacade : ICategoryFacade
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly ICategoryFactory _categoryFactory;
+    
+    public CategoryFacade(ICategoryRepository categoryRepository, ICategoryFactory categoryFactory)
+    {
+        _categoryRepository = categoryRepository;
+        _categoryFactory = categoryFactory;
+    }
     public Category CreateCategory(string name, CategoryType type)
     {
         var category = _categoryFactory.CreateCategory(name, type);

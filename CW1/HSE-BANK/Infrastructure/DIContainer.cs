@@ -3,7 +3,10 @@ using Microsoft.Extensions.Caching.Memory;
 using HSE_BANK.Commands;
 using HSE_BANK.Export;
 using HSE_BANK.Facades;
+using HSE_BANK.Factories;
 using HSE_BANK.Infrastructure;
+using HSE_BANK.Interfaces.Export;
+using HSE_BANK.Interfaces.IFactories;
 using HSE_BANK.Interfaces.Repository;
 using HSE_BANK.Proxy.Cache;
 using HSE_BANK.Proxy.InMemory;
@@ -17,10 +20,18 @@ public static class DIContainer
     private static IServiceProvider CreateServiceProvider()
     {
         var services = new ServiceCollection();
-
-        services.AddSingleton<Menu>();
         
         services.AddMemoryCache();
+
+        services.AddSingleton<IExportVisitor, CsvExportVisitor>();
+        services.AddSingleton<IExportVisitor, JsonExportVisitor>();
+        services.AddSingleton<IExportVisitor, YamlExportVisitor>();
+        
+        services.AddSingleton<Exporter>();
+        
+        services.AddSingleton<IBankAccountFactory , BankAccountFactory>();
+        services.AddSingleton<ICategoryFactory, CategoryFactory>();
+        services.AddSingleton<IOperationFactory, OperationFactory>();
 
         services.AddSingleton<InMemoryBankAccountRepository>();
         services.AddSingleton<InMemoryCategoryRepository>();
@@ -42,17 +53,13 @@ public static class DIContainer
         services.AddSingleton<IBankAccountFacade, BankAccountFacade>();
         services.AddSingleton<ICategoryFacade, CategoryFacade>();
         services.AddSingleton<IOperationFacade, OperationFacade>();
-
-        services.AddSingleton<IAnalysis, AnalysisFacade>();
-        
-
-        
-        services.AddTransient<JsonExportVisitor>();
-        services.AddTransient<YamlExportVisitor>();
+        services.AddSingleton<IAnalysis, AnalysisFacade>(); ;
 
         services.AddTransient<CreateBankAccountCommand>();
         services.AddTransient<CreateCategoryCommand>();
         services.AddTransient<CreateOperationCommand>();
+        
+        services.AddSingleton<Menu>();
         
         return services.BuildServiceProvider();
     }

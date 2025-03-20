@@ -8,6 +8,10 @@ public interface IBankAccountFacade
     
     BankAccount GetBankAccount(Guid id);
     
+    BankAccount GetBankAccount(string name);
+    
+    
+    IEnumerable<BankAccount> GetAllBankAccounts();
     void UpdateBankAccount(BankAccount account);
     
     void DeleteBankAccount(BankAccount account);

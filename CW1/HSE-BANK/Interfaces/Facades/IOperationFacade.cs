@@ -9,6 +9,8 @@ public interface IOperationFacade
     Operation CreateOperation(OperationType type, Guid accountId, decimal amount, string description, DateTime date,
         string categoryName, CategoryType categoryType);
 
+    IEnumerable<Operation> GetAllOperations();
+    
     Operation GetOperationById(Guid id);
     
     void UpdateOperation(Operation operation);

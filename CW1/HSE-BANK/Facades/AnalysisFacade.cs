@@ -6,12 +6,10 @@ namespace HSE_BANK.Facades;
 
 public class AnalysisFacade : IAnalysis
 {
-    //private readonly IBankAccountRepository _bankAccountRepository;
     private readonly IOperationRepository _operationRepository;
  
     public AnalysisFacade(IOperationRepository operationRepository)
     {
-        //_bankAccountRepository = bankAccountRepository;
         _operationRepository = operationRepository;
     }
     public decimal GetTotalAmountByDate(BankAccount account, DateTime start, DateTime end)
