@@ -1,5 +1,6 @@
 using HSE_BANK.Domain_Models.Enums;
 using HSE_BANK.Factories;
+using HSE_BANK.Interfaces.Export;
 using HSE_BANK.Interfaces.IFactories;
 
 namespace HSE_BANK.Domain_Models;
@@ -27,6 +28,10 @@ public class Operation
         Category = factory.CreateCategory(categoryName, categoryType);
     }
     
+    public void Accept(IExportVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
     
     
 }
