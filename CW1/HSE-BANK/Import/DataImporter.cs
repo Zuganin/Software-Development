@@ -13,12 +13,12 @@ public abstract class DataImporter<T>
         return data;
     }
 
-    protected virtual string ReadFile(string filePath)
+    public virtual string ReadFile(string filePath)
     {
         return File.ReadAllText(filePath);
     }
 
 
-    protected abstract List<T> ParseData(string fileContent);
+    public abstract List<T> ParseData(string fileContent);
     
 }

@@ -39,17 +39,17 @@ public class CsvExportVisitor : IExportVisitor
     
     public void Close()
     {
-        if (_bankAccounts != null || _bankAccounts.Any())
+        if ( _bankAccounts.Any())
         {
             // Экспорт BankAccounts
-            using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "bankAccounts.csv")))
+            using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "bankAccounts.csv") ))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(_bankAccounts);
             }
         }
 
-        if (_categories != null || _categories.Any())
+        if ( _categories.Any())
         {
             // Экспорт Categories
             using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "categories.csv")))
@@ -59,10 +59,10 @@ public class CsvExportVisitor : IExportVisitor
             }
         }
 
-        if (_operations != null || _operations.Any())
+        if (_operations.Any())
         {
             // Экспорт Operations
-            using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "operations.csv")))
+            using (var writer = new StreamWriter(Path.Combine(_outputDirectory, "operations.csv") ))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(_operations);

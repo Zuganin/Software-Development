@@ -11,6 +11,10 @@ public class InMemoryOperationRepository : IOperationRepository
 
     public Operation GetById(Guid id)
     {
+        if (!_operations.ContainsKey(id))
+        {
+            throw new ArgumentException($"Operation with ID {id} not exists");
+        }
         return _operations[id];
     }
 
@@ -25,15 +29,15 @@ public class InMemoryOperationRepository : IOperationRepository
         _operations.Add(operation.Id, operation);
     }
 
-    public void Update(Operation obj)
+    public void Update(Operation operation)
     {
-         ArgumentNullException.ThrowIfNull(obj);
+         ArgumentNullException.ThrowIfNull(operation);
 
-         if (!_operations.ContainsKey(obj.Id))
+         if (!_operations.ContainsKey(operation.Id))
          {
-             throw new ArgumentException($"Category with ID {obj.Id} not exists");
+             throw new ArgumentException($"Category with ID {operation.Id} not exists");
          }
-         _operations[obj.Id] = obj;
+         _operations[operation.Id] = operation;
     }
 
     public void Delete(Guid id)

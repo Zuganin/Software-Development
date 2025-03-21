@@ -11,4 +11,7 @@ public enum CategoryType
     CommunalServices = 6,
     Transactions = 7,
     Medicine = 8,
+    Entertainment = 9,
+    Investment = 10,
+    CashBack = 11,
 }

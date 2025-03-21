@@ -1,7 +1,7 @@
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
 
-namespace Tests;
+namespace Tests.DomainModel;
 
 public class CategoryTests
 {

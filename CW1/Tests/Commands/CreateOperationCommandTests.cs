@@ -1,9 +1,9 @@
-using Xunit;
-using Moq;
-using HSE_BANK.Facades;
 using HSE_BANK.Commands;
 using HSE_BANK.Domain_Models.Enums;
-using System;
+using HSE_BANK.Facades;
+using Moq;
+
+namespace Tests.Commands;
 
 public class CreateOperationCommandTests
 {
@@ -22,12 +22,12 @@ public class CreateOperationCommandTests
         var categoryName = "Зарплата";
         var categoryType = CategoryType.Salary;
         
-        command.Create(operationType, bankAccountId, amount, description, date, categoryName, categoryType);
+        command.Create(operationType, bankAccountId, amount,  date, description,categoryName, categoryType);
 
         // Act
         command.Execute();
 
         // Assert
-        facadeMock.Verify(f => f.CreateOperation(operationType, bankAccountId, amount, description, date, categoryName, categoryType), Times.Once);
+        facadeMock.Verify(f => f.CreateOperation(operationType, bankAccountId, amount,  date, description,categoryName, categoryType), Times.Once);
     }
 }

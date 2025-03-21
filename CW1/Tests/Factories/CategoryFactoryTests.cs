@@ -1,8 +1,7 @@
-using Xunit;
-using HSE_BANK.Factories;
-using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
-using System;
+using HSE_BANK.Factories;
+
+namespace Tests.Factories;
 
 public class CategoryFactoryTests
 {

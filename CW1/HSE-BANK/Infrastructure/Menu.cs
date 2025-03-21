@@ -164,7 +164,7 @@ public class Menu
                     .Title("Выберите тип категории:")
                     .AddChoices(Enum.GetValues<CategoryType>().ToList()));
                 CreateOperationCommand createOperationCommand = new(_operationFacade);
-                createOperationCommand.Create(opType, account.Id, amount, description, DateTime.Now,
+                createOperationCommand.Create(opType, account.Id, amount, DateTime.Now, description,
                     categoryName, categoryType);
                 _timedCommandDecorator.SetCommand(createOperationCommand);
                 _timedCommandDecorator.Execute();
@@ -327,7 +327,7 @@ public class Menu
         var operations = csvOperationImporter.ImportData(operationPath);
         foreach (var operation in operations)
         {
-            _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount, operation.Description, operation.Date, operation.Category.Name, operation.Category.Type);
+            _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount,  operation.Date, operation.Description, operation.Category.Name, operation.Category.Type);
         }
     }
     
@@ -350,7 +350,7 @@ public class Menu
         var operations = csvOperationImporter.ImportData(operationPath);
         foreach (var operation in operations)
         {
-            _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount, operation.Description, operation.Date, operation.Category.Name, operation.Category.Type);
+            _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount,  operation.Date, operation.Description, operation.Category.Name, operation.Category.Type);
         }
     }
     
@@ -372,7 +372,7 @@ public class Menu
         var operations = csvOperationImporter.ImportData(operationPath);
         foreach (var operation in operations)
         {
-            _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount, operation.Description, operation.Date, operation.Category.Name, operation.Category.Type);
+            _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount,  operation.Date, operation.Description,operation.Category.Name, operation.Category.Type);
         }
     }
     

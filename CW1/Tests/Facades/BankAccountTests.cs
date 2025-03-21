@@ -1,11 +1,10 @@
-using Xunit;
-using Moq;
+using HSE_BANK.Domain_Models;
 using HSE_BANK.Facades;
 using HSE_BANK.Interfaces.IFactories;
 using HSE_BANK.Interfaces.Repository;
-using HSE_BANK.Domain_Models;
-using System;
-using System.Collections.Generic;
+using Moq;
+
+namespace Tests.Facades;
 
 public class BankAccountFacadeTests
 {

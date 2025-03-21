@@ -1,8 +1,8 @@
-using Xunit;
-using Moq;
-using HSE_BANK.Facades;
 using HSE_BANK.Commands;
-using HSE_BANK.Interfaces.Repository;
+using HSE_BANK.Facades;
+using Moq;
+
+namespace Tests.Commands;
 
 public class CreateBankAccountCommandTests
 {

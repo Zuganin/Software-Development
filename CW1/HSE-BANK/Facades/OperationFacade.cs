@@ -21,7 +21,7 @@ public class OperationFacade : IOperationFacade
         _categoryRepository = categoryRepository;
     }
     
-    public Operation CreateOperation(OperationType type, Guid accountId, decimal amount, string description, DateTime date,
+    public Operation CreateOperation(OperationType type, Guid accountId, decimal amount, DateTime date,string description,
         string categoryName, CategoryType categoryType)
     {
         Operation operation = _operationFactory.CreateOperation(type, accountId, amount, date, description, categoryName, categoryType, _categoryFactory);

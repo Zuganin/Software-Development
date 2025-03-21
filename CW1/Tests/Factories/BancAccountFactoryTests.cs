@@ -1,7 +1,6 @@
-using Xunit;
 using HSE_BANK.Factories;
-using HSE_BANK.Domain_Models;
-using System;
+
+namespace Tests.Factories;
 
 public class BankAccountFactoryTests
 {

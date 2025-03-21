@@ -32,15 +32,15 @@ public class CacheBankAccountRepository : IBankAccountRepository
         return account;
     }
 
-    public void Add(BankAccount category)
+    public void Add(BankAccount operation)
     {
-        _realRepository.Add(category);
+        _realRepository.Add(operation);
         _cache.Remove(CacheAllAccountsKey);
     }
 
-    public void Update(BankAccount account)
+    public void Update(BankAccount operation)
     {
-        _realRepository.Update(account);
+        _realRepository.Update(operation);
         _cache.Remove(CacheAllAccountsKey);
     }
 

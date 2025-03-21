@@ -1,9 +1,9 @@
-using Xunit;
-using Moq;
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
 using HSE_BANK.Interfaces.IFactories;
-using System;
+using Moq;
+
+namespace Tests.DomainModel;
 
 public class OperationTests
 {

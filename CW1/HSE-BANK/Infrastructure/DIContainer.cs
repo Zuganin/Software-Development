@@ -1,18 +1,19 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Caching.Memory;
 using HSE_BANK.Commands;
 using HSE_BANK.Export;
 using HSE_BANK.Facades;
 using HSE_BANK.Factories;
-using HSE_BANK.Infrastructure;
 using HSE_BANK.Interfaces.Command;
 using HSE_BANK.Interfaces.Export;
 using HSE_BANK.Interfaces.IFactories;
 using HSE_BANK.Interfaces.Repository;
 using HSE_BANK.Proxy.Cache;
 using HSE_BANK.Proxy.InMemory;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 
-public static class DIContainer
+namespace HSE_BANK.Infrastructure;
+
+public static class DiContainer
 {
     private static IServiceProvider? _services;
 
@@ -70,24 +71,4 @@ public static class DIContainer
         
         return services.BuildServiceProvider();
     }
-    public static Menu Menu => Services.GetRequiredService<Menu>();
-    
-    public static IBankAccountFacade BankAccountFacade => Services.GetRequiredService<IBankAccountFacade>();
-    
-    public static ICategoryFacade CategoryFacade => Services.GetRequiredService<ICategoryFacade>();
-    
-    public static IOperationFacade OperationFacade => Services.GetRequiredService<IOperationFacade>();
-    
-    public static IAnalysis AnalyticsService => Services.GetRequiredService<IAnalysis>();
-    
-    public static CsvExportVisitor CsvExporter => Services.GetRequiredService<CsvExportVisitor>();
-    public static JsonExportVisitor JsonExporter => Services.GetRequiredService<JsonExportVisitor>();
-    
-    public static YamlExportVisitor YamlExporter => Services.GetRequiredService<YamlExportVisitor>();
-    
-    public static CreateBankAccountCommand CreateBankAccountCommand => Services.GetRequiredService<CreateBankAccountCommand>();
-    
-    public static CreateCategoryCommand CreateCategoryCommand => Services.GetRequiredService<CreateCategoryCommand>();
-    
-    public static CreateOperationCommand CreateOperationCommand => Services.GetRequiredService<CreateOperationCommand>();
 }

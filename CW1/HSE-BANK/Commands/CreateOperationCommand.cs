@@ -21,7 +21,7 @@ public class CreateOperationCommand : ICommands
         _operationFacade = operationFacade;
     }
 
-    public void Create(OperationType operationType, Guid bankAccountId, decimal amount,string description, DateTime date,  string categoryName, CategoryType categoryType)
+    public void Create(OperationType operationType, Guid bankAccountId, decimal amount, DateTime date, string description, string categoryName, CategoryType categoryType)
     {
         _operationType = operationType;
         _bankAccountId = bankAccountId;
@@ -34,7 +34,7 @@ public class CreateOperationCommand : ICommands
     
     public void Execute()
     {
-        _operationFacade.CreateOperation(_operationType, _bankAccountId, _amount, _description, _date, _categoryName, _categoryType);
+        _operationFacade.CreateOperation(_operationType, _bankAccountId, _amount, _date,_description, _categoryName, _categoryType);
     }
     
 }

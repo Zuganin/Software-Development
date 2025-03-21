@@ -1,9 +1,8 @@
-using Xunit;
-using Moq;
 using HSE_BANK.Commands;
 using HSE_BANK.Interfaces.Command;
-using System;
-using System.IO;
+using Moq;
+
+namespace Tests.Commands;
 
 public class TimedCommandDecoratorTests
 {

@@ -35,6 +35,27 @@ public class Operation
         Category = factory.CreateCategory(categoryName, categoryType);
     }
     
+    public Operation (OperationType type, Guid bankAccountId, decimal amount, DateTime date, string description, Category category)
+    {
+        Id = Guid.NewGuid();
+        Type = type;
+        BankAccountId = bankAccountId;
+        Amount = amount;
+        Date = date;
+        Description = description;
+        Category = category;
+    }
+    public Operation Update(OperationType type, Guid bankAccountId, decimal amount, DateTime date, string description, Category category)
+    {
+        Type = type;
+        BankAccountId = bankAccountId;
+        Amount = amount;
+        Date = date;
+        Description = description;
+        Category = category;
+        return this;
+    }
+    
     public void Accept(IExportVisitor visitor)
     {
         visitor.Visit(this);

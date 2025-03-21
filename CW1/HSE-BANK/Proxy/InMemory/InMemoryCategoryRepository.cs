@@ -9,30 +9,34 @@ public class InMemoryCategoryRepository : ICategoryRepository
     private Dictionary<Guid, Category> _categories = new();
     public Category GetById(Guid id)
     {
+        if (!_categories.ContainsKey(id))
+        {
+            throw new ArgumentException($"Category with ID {id} not exists");
+        }
         return _categories.FirstOrDefault(_category => _category.Key == id).Value;
     }
 
-    public void Add(Category category)
+    public void Add(Category operation)
     {
-        ArgumentNullException.ThrowIfNull(category);
+        ArgumentNullException.ThrowIfNull(operation);
         
-        if (_categories.ContainsKey(category.Id))
+        if (_categories.ContainsKey(operation.Id))
         {
-            throw new ArgumentException($"Category with ID {category.Id} already exists");
+            throw new ArgumentException($"Category with ID {operation.Id} already exists");
         }
-        _categories.Add(category.Id, category);
+        _categories.Add(operation.Id, operation);
     }
     
 
-    public void Update(Category odj)
+    public void Update(Category operation)
     {
-        ArgumentNullException.ThrowIfNull(odj);
+        ArgumentNullException.ThrowIfNull(operation);
 
-        if (!_categories.ContainsKey(odj.Id))
+        if (!_categories.ContainsKey(operation.Id))
         {
-            throw new ArgumentException($"Category with ID {odj.Id} not exists");
+            throw new ArgumentException($"Category with ID {operation.Id} not exists");
         }
-        _categories[odj.Id] = odj;
+        _categories[operation.Id] = operation;
     }
 
     public void Delete(Guid id)

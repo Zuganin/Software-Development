@@ -1,8 +1,9 @@
-using Xunit;
-using Moq;
-using HSE_BANK.Facades;
 using HSE_BANK.Commands;
 using HSE_BANK.Domain_Models.Enums;
+using HSE_BANK.Facades;
+using Moq;
+
+namespace Tests.Commands;
 
 public class CreateCategoryCommandTests
 {

@@ -31,15 +31,15 @@ public class CacheCategoryRepository : ICategoryRepository
         return category;
     }
 
-    public void Add(Category category)
+    public void Add(Category operation)
     {
-        _realRepository.Add(category);
+        _realRepository.Add(operation);
         _cache.Remove(CacheAllCategoriesKey);
     }
 
-    public void Update(Category odj)
+    public void Update(Category operation)
     {
-        _realRepository.Update(odj);
+        _realRepository.Update(operation);
         _cache.Remove(CacheAllCategoriesKey);
     }
 

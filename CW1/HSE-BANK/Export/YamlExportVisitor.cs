@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Interfaces.Export;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+
+namespace HSE_BANK.Export;
 
 public class YamlExportVisitor : IExportVisitor
 {
@@ -41,17 +40,17 @@ public class YamlExportVisitor : IExportVisitor
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .Build();
             
-        if (_bankAccounts != null || _bankAccounts.Any())
+        if (_bankAccounts.Any())
         { 
             File.WriteAllText(Path.Combine(_outputDirectory, "bankAccounts.yaml"), serializer.Serialize(_bankAccounts));
         }
 
-        if (_categories != null || _categories.Any())
+        if (_categories.Any())
         {
             File.WriteAllText(Path.Combine(_outputDirectory, "categories.yaml"), serializer.Serialize(_categories));
         }
 
-        if (_operations != null || _operations.Any())
+        if (_operations.Any())
         {
             File.WriteAllText(Path.Combine(_outputDirectory, "operations.yaml"), serializer.Serialize(_operations));
         }

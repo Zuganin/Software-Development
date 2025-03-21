@@ -5,9 +5,8 @@ namespace HSE_BANK.Import;
 
 public class YamlImporter<T> : DataImporter<T>
 {
-    protected override List<T> ParseData(string fileContent)
+    public override List<T> ParseData(string fileContent)
     {
-        // Используем YamlDotNet для десериализации YAML
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .Build();

@@ -19,6 +19,12 @@ public class Category
         Name = name;
         Type = type;
     }
+    public Category Update(string name, CategoryType type)
+    {
+        Name = name;
+        Type = type;
+        return this;
+    }
     public void Accept(IExportVisitor visitor)
     {
         visitor.Visit(this);

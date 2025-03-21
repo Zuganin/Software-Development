@@ -33,15 +33,15 @@ public class CacheOperationRepository : IOperationRepository
         return operation;
     }
 
-    public void Add(Operation category)
+    public void Add(Operation operation)
     {
-        _realRepository.Add(category);
+        _realRepository.Add(operation);
         _cache.Remove(CacheAllOperationsKey);
     }
 
-    public void Update(Operation odj)
+    public void Update(Operation operation)
     {
-        _realRepository.Update(odj);
+        _realRepository.Update(operation);
         _cache.Remove(CacheAllOperationsKey);
     }
 
@@ -66,13 +66,10 @@ public class CacheOperationRepository : IOperationRepository
 
     public IEnumerable<Operation> GetOperationsByAccountId(Guid id)
     {
-        if (_cache.TryGetValue(CacheOperationKey + id, out IEnumerable<Operation>? operations) && operations != null)
-        {
-            return operations;
-        }
-        operations = _realRepository.GetAll();
-        _cache.Set(CacheOperationKey+ id, operations, CacheLife);
-        return operations.ToList();
+        var operations = _realRepository.GetAll();
+        _cache.Set(CacheOperationKey + id, operations, CacheLife);
+        
+        return operations.Where(op => op.BankAccountId == id);
     }
 
     public IEnumerable<Operation> GetOperationsByDate(DateTime start, DateTime end)

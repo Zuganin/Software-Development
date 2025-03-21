@@ -11,7 +11,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        var services = DIContainer.Services;
+        var services = DiContainer.Services;
 
         var menu = services.GetRequiredService<Menu>();
         

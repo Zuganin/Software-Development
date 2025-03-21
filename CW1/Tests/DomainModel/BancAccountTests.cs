@@ -1,7 +1,7 @@
 using Xunit;
 using HSE_BANK.Domain_Models;
 using System;
-namespace Tests;
+namespace Tests.DomainModel;
 
 public class BancAccountTests
 {

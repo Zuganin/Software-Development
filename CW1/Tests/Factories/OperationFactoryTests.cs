@@ -1,10 +1,10 @@
-using Xunit;
-using Moq;
-using HSE_BANK.Factories;
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Domain_Models.Enums;
+using HSE_BANK.Factories;
 using HSE_BANK.Interfaces.IFactories;
-using System;
+using Moq;
+
+namespace Tests.Factories;
 
 public class OperationFactoryTests
 {
@@ -14,7 +14,7 @@ public class OperationFactoryTests
         var factory = new OperationFactory();
         var categoryFactoryMock = new Mock<ICategoryFactory>();
         categoryFactoryMock.Setup(f => f.CreateCategory(It.IsAny<string>(), It.IsAny<CategoryType>()))
-                           .Returns((string name, CategoryType type) => new Category(name, type));
+            .Returns((string name, CategoryType type) => new Category(name, type));
 
         OperationType type = OperationType.Enrollments;
         Guid bankAccountId = Guid.NewGuid();
@@ -50,7 +50,7 @@ public class OperationFactoryTests
         var factory = new OperationFactory();
         var categoryFactoryMock = new Mock<ICategoryFactory>();
         categoryFactoryMock.Setup(f => f.CreateCategory(It.IsAny<string>(), It.IsAny<CategoryType>()))
-                           .Returns((string name, CategoryType type) => new Category(name, type));
+            .Returns((string name, CategoryType type) => new Category(name, type));
 
         OperationType type = OperationType.Enrollments;
         Guid bankAccountId = Guid.NewGuid();

@@ -16,6 +16,15 @@ public class BankAccount
         Name = name;
         Balance = balance;
     }
+    public void UpdateBalance(decimal amount)
+    {
+        Balance = amount;
+    }
+    
+    public void UpdateName(string name)
+    {
+        Name = name;
+    }
     
     public void Accept(IExportVisitor visitor)
     {

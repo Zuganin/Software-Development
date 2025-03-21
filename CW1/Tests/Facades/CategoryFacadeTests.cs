@@ -1,49 +1,142 @@
-using Xunit;
-using Moq;
+using HSE_BANK.Domain_Models;
+using HSE_BANK.Domain_Models.Enums;
 using HSE_BANK.Facades;
 using HSE_BANK.Interfaces.IFactories;
 using HSE_BANK.Interfaces.Repository;
-using HSE_BANK.Domain_Models;
-using HSE_BANK.Domain_Models.Enums;
-using System;
+using Moq;
+
+namespace Tests.Facades;
 
 public class CategoryFacadeTests
 {
-    [Fact]
-    public void CreateCategory_ShouldCreateAndSaveCategory()
+    private readonly Mock<ICategoryRepository> _categoryRepositoryMock;
+    private readonly Mock<ICategoryFactory> _categoryFactoryMock;
+    private readonly CategoryFacade _categoryFacade;
+
+    public CategoryFacadeTests()
     {
-        // Arrange
-        var factoryMock = new Mock<ICategoryFactory>();
-        var repoMock = new Mock<ICategoryRepository>();
-
-        factoryMock.Setup(f => f.CreateCategory("Продукты", CategoryType.Supermarkets))
-            .Returns(new Category("Продукты", CategoryType.Supermarkets));
-
-        var facade = new CategoryFacade(repoMock.Object, factoryMock.Object);
-
-        // Act
-        var category = facade.CreateCategory("Продукты", CategoryType.Supermarkets);
-
-        // Assert
-        Assert.NotNull(category);
-        repoMock.Verify(r => r.Add(It.IsAny<Category>()), Times.Once);
+        _categoryRepositoryMock = new Mock<ICategoryRepository>();
+        _categoryFactoryMock = new Mock<ICategoryFactory>();
+        _categoryFacade = new CategoryFacade(_categoryRepositoryMock.Object, _categoryFactoryMock.Object);
     }
 
     [Fact]
-    public void GetCategoryByName_ShouldReturnCorrectCategory()
+    public void CreateCategory_ShouldCreateAndAddCategory()
     {
         // Arrange
-        var repoMock = new Mock<ICategoryRepository>();
-        var testCategory = new Category("Здоровье", CategoryType.Medicine);
-        repoMock.Setup(r => r.GetByName("Здоровье")).Returns(testCategory);
+        var categoryName = "Продукты";
+        var categoryType = CategoryType.Supermarkets;
+        var expectedCategory = new Category(categoryName, categoryType);
 
-        var facade = new CategoryFacade(repoMock.Object, Mock.Of<ICategoryFactory>());
+        _categoryFactoryMock
+            .Setup(f => f.CreateCategory(categoryName, categoryType))
+            .Returns(expectedCategory);
 
         // Act
-        var category = facade.GetCategory("Здоровье");
+        var result = _categoryFacade.CreateCategory(categoryName, categoryType);
 
         // Assert
-        Assert.NotNull(category);
-        Assert.Equal(CategoryType.Medicine, category.Type);
+        Assert.NotNull(result);
+        Assert.Equal(categoryName, result.Name);
+        Assert.Equal(categoryType, result.Type);
+
+        _categoryRepositoryMock.Verify(r => r.Add(expectedCategory), Times.Once);
+    }
+
+    [Fact]
+    public void GetAllCategoryTypes_ShouldReturnAllCategoryTypes()
+    {
+        // Act
+        var result = _categoryFacade.GetAllCategoryTypes();
+
+        // Assert
+        var expectedTypes = Enum.GetValues<CategoryType>().ToList();
+        Assert.Equal(expectedTypes, result);
+    }
+
+    [Fact]
+    public void GetAllCategories_ShouldReturnCategories()
+    {
+        // Arrange
+        var categories = new List<Category>
+        {
+            new Category("Зарплата", CategoryType.Salary),
+            new Category("Кафе", CategoryType.Cafe)
+        };
+
+        _categoryRepositoryMock
+            .Setup(r => r.GetAll())
+            .Returns(categories);
+
+        // Act
+        var result = _categoryFacade.GetAllCategories();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count());
+    }
+
+    [Fact]
+    public void GetCategory_ByName_ShouldReturnCorrectCategory()
+    {
+        // Arrange
+        var categoryName = "Кафе";
+        var expectedCategory = new Category(categoryName, CategoryType.Cafe);
+
+        _categoryRepositoryMock
+            .Setup(r => r.GetByName(categoryName))
+            .Returns(expectedCategory);
+
+        // Act
+        var result = _categoryFacade.GetCategory(categoryName);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(categoryName, result.Name);
+    }
+
+    [Fact]
+    public void GetCategory_ById_ShouldReturnCorrectCategory()
+    {
+        // Arrange
+       
+        var expectedCategory = new Category("Еда", CategoryType.Supermarkets);
+        var categoryId = expectedCategory.Id;
+        _categoryRepositoryMock
+            .Setup(r => r.GetById(categoryId))
+            .Returns(expectedCategory);
+
+        // Act
+        var result = _categoryFacade.GetCategory(categoryId);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(categoryId, result.Id);
+    }
+
+    [Fact]
+    public void UpdateCategory_ShouldCallUpdateOnRepository()
+    {
+        // Arrange
+        var category = new Category("Спорт", CategoryType.Entertainment);
+
+        // Act
+        _categoryFacade.UpdateCategory(category);
+
+        // Assert
+        _categoryRepositoryMock.Verify(r => r.Update(category), Times.Once);
+    }
+
+    [Fact]
+    public void DeleteCategory_ShouldCallDeleteOnRepository()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+
+        // Act
+        _categoryFacade.DeleteCategory(categoryId);
+
+        // Assert
+        _categoryRepositoryMock.Verify(r => r.Delete(categoryId), Times.Once);
     }
 }

@@ -10,35 +10,43 @@ public class InMemoryBankAccountRepository : IBankAccountRepository
 
     public BankAccount GetByName(string name)
     {
-        return _bankAccounts.Values.FirstOrDefault(account => account.Name == name);
+        if(!_bankAccounts.Values.Any(x => x.Name == name))
+        {
+            throw new ArgumentException($"Bank account with name {name} not exists");
+        }
+        return _bankAccounts.Values.FirstOrDefault(x => x.Name == name);
     }
 
     public BankAccount GetById(Guid id)
     {
-        return _bankAccounts.Values.FirstOrDefault(account => account.Id == id);
+        if (!_bankAccounts.ContainsKey(id))
+        {
+            throw new ArgumentException($"Bank account with ID {id} not exists");
+        }
+        return _bankAccounts.ContainsKey(id) ? _bankAccounts[id] : null;
     }
 
-    public void Add(BankAccount category)
+    public void Add(BankAccount operation)
     {
-        ArgumentNullException.ThrowIfNull(category);
+        ArgumentNullException.ThrowIfNull(operation);
             
-        if (_bankAccounts.ContainsKey(category.Id))
+        if (_bankAccounts.ContainsKey(operation.Id))
         {
-            throw new ArgumentException($"Bank account with ID {category.Id} already exists");
+            throw new ArgumentException($"Bank account with ID {operation.Id} already exists");
         }
-        _bankAccounts.Add(category.Id, category);
+        _bankAccounts.Add(operation.Id, operation);
         
     }
 
-    public void Update(BankAccount account)
+    public void Update(BankAccount operation)
     {
-        ArgumentNullException.ThrowIfNull(account);
+        ArgumentNullException.ThrowIfNull(operation);
 
-        if (!_bankAccounts.ContainsKey(account.Id))
+        if (!_bankAccounts.ContainsKey(operation.Id))
         {
-            throw new ArgumentException($"Bank account with ID {account.Id} not exists");
+            throw new ArgumentException($"Bank account with ID {operation.Id} not exists");
         }
-        _bankAccounts[account.Id] = account;
+        _bankAccounts[operation.Id] = operation;
     }
 
     public void Delete(Guid id)

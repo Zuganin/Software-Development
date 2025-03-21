@@ -1,63 +1,171 @@
-using Xunit;
-using Moq;
-using HSE_BANK.Facades;
-using HSE_BANK.Proxy.InMemory;
 using HSE_BANK.Domain_Models;
-using System;
-using HSE_BANK.Factories;
-using HSE_BANK.Interfaces.IFactories;
+using HSE_BANK.Proxy.InMemory;
+
+namespace Tests.Proxy.InMemory;
 
 public class InMemoryBankAccountRepositoryTests
 {
-    [Fact]
-    public void Add_ShouldStoreAccount()
+    private readonly InMemoryBankAccountRepository _repository;
+
+    public InMemoryBankAccountRepositoryTests()
     {
-        // Arrange
-        var repository = new InMemoryBankAccountRepository();
-        var factory = new BankAccountFactory();
-        var facade = new BankAccountFacade(factory, repository);
-        var account = new BankAccount("Основной", 1000);
-
-        // Act
-        facade.CreateBankAccount(account.Name, account.Balance);
-        var result = repository.GetById(account.Id);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal("Основной", result.Name);
+        _repository = new InMemoryBankAccountRepository();
     }
 
     [Fact]
-    public void Update_ShouldModifyAccountBalance()
+    public void GetById_ShouldReturnAccount_WhenExists()
     {
         // Arrange
-        var repository = new InMemoryBankAccountRepository();
-        var facade = new BankAccountFacade(Mock.Of<IBankAccountFactory>(), repository);
-        var account = new BankAccount("Счет", 2000);
-        repository.Add(account);
+        var account = new BankAccount("Основной счет", 5000);
+        _repository.Add(account);
 
         // Act
-        var newAccount = new BankAccount(account.Name, 3000);
-        facade.UpdateBankAccount(newAccount); // Используем фасад для обновления
-        var updated = repository.GetById(account.Id);
+        var result = _repository.GetById(account.Id);
 
         // Assert
-        Assert.Equal(3000, updated.Balance);
+        Assert.Equal(account, result);
     }
 
     [Fact]
-    public void Delete_ShouldRemoveAccount()
+    public void GetById_ShouldThrowException_WhenAccountDoesNotExist()
     {
         // Arrange
-        var repository = new InMemoryBankAccountRepository();
-        var facade = new BankAccountFacade(Mock.Of<IBankAccountFactory>(), repository);
-        var account = new BankAccount("Удаляемый", 1000);
-        repository.Add(account);
+        var accountId = Guid.NewGuid();
+
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() => _repository.GetById(accountId));
+        Assert.Contains("Bank account with ID", exception.Message);
+    }
+
+    [Fact]
+    public void GetByName_ShouldReturnAccount_WhenExists()
+    {
+        // Arrange
+        var account = new BankAccount("Резервный счет", 10000);
+        _repository.Add(account);
 
         // Act
-        facade.DeleteBankAccount(account);
+        var result = _repository.GetByName("Резервный счет");
 
         // Assert
-        Assert.Throws<ArgumentException>(() => repository.GetById(account.Id));
+        Assert.Equal(account, result);
+    }
+
+    [Fact]
+    public void GetByName_ShouldThrowException_WhenAccountDoesNotExist()
+    {
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() => _repository.GetByName("Несуществующий счет"));
+        Assert.Contains("Bank account with name", exception.Message);
+    }
+
+    [Fact]
+    public void Add_ShouldAddAccount_WhenValid()
+    {
+        // Arrange
+        var account = new BankAccount("Зарплатный счет", 15000);
+
+        // Act
+        _repository.Add(account);
+        var result = _repository.GetById(account.Id);
+
+        // Assert
+        Assert.Equal(account, result);
+    }
+
+    [Fact]
+    public void Add_ShouldThrowException_WhenAccountIsNull()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _repository.Add(null));
+    }
+
+    [Fact]
+    public void Add_ShouldThrowException_WhenAccountAlreadyExists()
+    {
+        // Arrange
+        var account = new BankAccount("Сберегательный счет", 20000);
+        _repository.Add(account);
+
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() => _repository.Add(account));
+        Assert.Contains("Bank account with ID", exception.Message);
+    }
+
+    [Fact]
+    public void Update_ShouldUpdateAccount_WhenExists()
+    {
+        // Arrange
+        var account = new BankAccount("Кредитный счет", 3000);
+        _repository.Add(account);
+
+        account.UpdateBalance(5000);
+
+        // Act
+        _repository.Update(account);
+        var result = _repository.GetById(account.Id);
+
+        // Assert
+        Assert.Equal(5000, result.Balance);
+    }
+
+    [Fact]
+    public void Update_ShouldThrowException_WhenAccountIsNull()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _repository.Update(null));
+    }
+
+    [Fact]
+    public void Update_ShouldThrowException_WhenAccountDoesNotExist()
+    {
+        // Arrange
+        var account = new BankAccount("Несуществующий счет", 7000);
+
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() => _repository.Update(account));
+        Assert.Contains("Bank account with ID", exception.Message);
+    }
+
+    [Fact]
+    public void Delete_ShouldRemoveAccount_WhenExists()
+    {
+        // Arrange
+        var account = new BankAccount("Депозитный счет", 25000);
+        _repository.Add(account);
+
+        // Act
+        _repository.Delete(account.Id);
+
+        // Assert
+        Assert.Throws<ArgumentException>(() => _repository.GetById(account.Id));
+    }
+
+    [Fact]
+    public void Delete_ShouldThrowException_WhenAccountDoesNotExist()
+    {
+        // Arrange
+        var accountId = Guid.NewGuid();
+
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() => _repository.Delete(accountId));
+        Assert.Contains("Bank account with ID", exception.Message);
+    }
+
+    [Fact]
+    public void GetAll_ShouldReturnAllAccounts()
+    {
+        // Arrange
+        var account1 = new BankAccount("Бизнес счет", 50000);
+        var account2 = new BankAccount("Инвестиционный счет", 75000);
+
+        _repository.Add(account1);
+        _repository.Add(account2);
+
+        // Act
+        var result = _repository.GetAll();
+
+        // Assert
+        Assert.Equal(2, result.Count());
     }
 }

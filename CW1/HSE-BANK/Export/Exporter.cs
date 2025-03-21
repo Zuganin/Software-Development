@@ -1,6 +1,7 @@
 using HSE_BANK.Domain_Models;
 using HSE_BANK.Interfaces.Export;
-using HSE_BANK.Interfaces.Repository;
+
+namespace HSE_BANK.Export;
 
 public class Exporter
 {
