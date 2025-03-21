@@ -1,0 +1,4 @@
+Id,Type,BankAccountId,Amount,Date,Description,Id,Name,Type
+a060bc04-57bd-4016-8d33-faae565174e3,Enrollments,f9201bb0-76a9-428b-892a-28da13e125ff,10000,03/21/2025 21:22:54,"Стипендия ",a9f3ba89-460c-442f-923a-5d657c308af4,Стипендия ВШЭ,Salary
+5da5923d-fa90-4b2b-ae8d-d5d3f8d6d185,Expenses,f9201bb0-76a9-428b-892a-28da13e125ff,1000,03/21/2025 21:23:16,Термос 1,987fe423-f855-4f15-98f2-81c87003e5e2,ООО ВБ,Supermarkets
+4721599f-98da-401e-91eb-50166db5c871,Expenses,f9201bb0-76a9-428b-892a-28da13e125ff,230,03/21/2025 21:23:39,Комплекс в столовой,384ccb6d-a97e-4f16-b8e3-b9e456035ba5,ООО ВШЭ,Cafe

@@ -1,0 +1,15 @@
+- id: 83e2f832-acf9-43c7-a19b-3c6def0f014d
+  name: ООО ОЗОН
+  type: Supermarkets
+- id: 903a3c08-d3d7-41d9-b19a-f38d160ebf83
+  name: ООО ВБ
+  type: Supermarkets
+- id: a9f3ba89-460c-442f-923a-5d657c308af4
+  name: Стипендия ВШЭ
+  type: Salary
+- id: 987fe423-f855-4f15-98f2-81c87003e5e2
+  name: ООО ВБ
+  type: Supermarkets
+- id: 384ccb6d-a97e-4f16-b8e3-b9e456035ba5
+  name: ООО ВШЭ
+  type: Cafe
