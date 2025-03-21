@@ -1,0 +1,30 @@
+- id: a060bc04-57bd-4016-8d33-faae565174e3
+  type: Enrollments
+  bankAccountId: f9201bb0-76a9-428b-892a-28da13e125ff
+  amount: 10000
+  date: 2025-03-21T21:22:54.9822600+03:00
+  description: 'Стипендия '
+  category:
+    id: a9f3ba89-460c-442f-923a-5d657c308af4
+    name: Стипендия ВШЭ
+    type: Salary
+- id: 5da5923d-fa90-4b2b-ae8d-d5d3f8d6d185
+  type: Expenses
+  bankAccountId: f9201bb0-76a9-428b-892a-28da13e125ff
+  amount: 1000
+  date: 2025-03-21T21:23:16.2325300+03:00
+  description: Термос 1
+  category:
+    id: 987fe423-f855-4f15-98f2-81c87003e5e2
+    name: ООО ВБ
+    type: Supermarkets
+- id: 4721599f-98da-401e-91eb-50166db5c871
+  type: Expenses
+  bankAccountId: f9201bb0-76a9-428b-892a-28da13e125ff
+  amount: 230
+  date: 2025-03-21T21:23:39.4968490+03:00
+  description: Комплекс в столовой
+  category:
+    id: 384ccb6d-a97e-4f16-b8e3-b9e456035ba5
+    name: ООО ВШЭ
+    type: Cafe

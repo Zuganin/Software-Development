@@ -1,0 +1,41 @@
+[
+  {
+    "Id": "a060bc04-57bd-4016-8d33-faae565174e3",
+    "Type": 1,
+    "BankAccountId": "f9201bb0-76a9-428b-892a-28da13e125ff",
+    "Amount": 10000.0,
+    "Date": "2025-03-21T21:22:54.98226+03:00",
+    "Description": "Стипендия ",
+    "Category": {
+      "Id": "a9f3ba89-460c-442f-923a-5d657c308af4",
+      "Name": "Стипендия ВШЭ",
+      "Type": 0
+    }
+  },
+  {
+    "Id": "5da5923d-fa90-4b2b-ae8d-d5d3f8d6d185",
+    "Type": 0,
+    "BankAccountId": "f9201bb0-76a9-428b-892a-28da13e125ff",
+    "Amount": 1000.0,
+    "Date": "2025-03-21T21:23:16.23253+03:00",
+    "Description": "Термос 1",
+    "Category": {
+      "Id": "987fe423-f855-4f15-98f2-81c87003e5e2",
+      "Name": "ООО ВБ",
+      "Type": 2
+    }
+  },
+  {
+    "Id": "4721599f-98da-401e-91eb-50166db5c871",
+    "Type": 0,
+    "BankAccountId": "f9201bb0-76a9-428b-892a-28da13e125ff",
+    "Amount": 230.0,
+    "Date": "2025-03-21T21:23:39.496849+03:00",
+    "Description": "Комплекс в столовой",
+    "Category": {
+      "Id": "384ccb6d-a97e-4f16-b8e3-b9e456035ba5",
+      "Name": "ООО ВШЭ",
+      "Type": 1
+    }
+  }
+]
