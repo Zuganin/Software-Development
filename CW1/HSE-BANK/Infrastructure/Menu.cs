@@ -16,7 +16,7 @@ public class Menu
     private static ICategoryFacade _categoryFacade;
     private static IOperationFacade _operationFacade;
     private static Exporter _exporter;
-    private static TimedCommandDecorator _timedCommandDecorator;
+    private static readonly TimedCommandDecorator TimedCommandDecorator = new();
     
     public Menu(IAnalysis analysisFacade, IBankAccountFacade bankAccountFacade, ICategoryFacade categoryFacade, IOperationFacade operationFacade, Exporter exporter)
     {
@@ -74,12 +74,20 @@ public class Menu
                 var name = AnsiConsole.Ask<string>("Введите название счета:");
                 CreateBankAccountCommand createBankAccountCommand = new(_bankAccountFacade);
                 createBankAccountCommand.Create(name, 0);
-                _timedCommandDecorator.SetCommand(createBankAccountCommand);
-                _timedCommandDecorator.Execute();
+                TimedCommandDecorator.SetCommand(createBankAccountCommand);
+                TimedCommandDecorator.Execute();
+
                 AnsiConsole.MarkupLine("[green]Счет добавлен![/]");
                 break;
             case "Удалить счет":
-                
+                var accounts = _bankAccountFacade.GetAllBankAccounts();
+                if (!accounts.Any())
+                {
+                    AnsiConsole.MarkupLine("[red]Нет счетов для удаления![/]");
+                    AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+                    Console.ReadLine();
+                    return;
+                }
                 var nameAccountToRemove = AnsiConsole.Ask<string>("Введите имя счета для удаления:");
                 var account = _bankAccountFacade.GetBankAccount(nameAccountToRemove);
                 _bankAccountFacade.DeleteBankAccount(account);
@@ -112,12 +120,19 @@ public class Menu
                     .AddChoices(_categoryFacade.GetAllCategoryTypes()));
                 CreateCategoryCommand createCategoryCommand = new(_categoryFacade);
                 createCategoryCommand.Create(name, type);
-                _timedCommandDecorator.SetCommand(createCategoryCommand);
-                _timedCommandDecorator.Execute();
+                TimedCommandDecorator.SetCommand(createCategoryCommand);
+                TimedCommandDecorator.Execute();
                 AnsiConsole.MarkupLine("[green]Категория добавлена![/]");
                 break;
             case "Удалить категорию":
                 var categories = _categoryFacade.GetAllCategories();
+                if (!categories.Any())
+                {
+                    AnsiConsole.MarkupLine("[red]Нет категорий для удаления![/]");
+                    AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+                    Console.ReadLine();
+                    return;
+                }
                 var nameCategoryToRemove = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Выберите категорию для удаления:")
@@ -127,11 +142,12 @@ public class Menu
                 AnsiConsole.MarkupLine("[red]Категория удалена![/]");
                 break;
             case "Список категорий":
+                var uniqueCategories = _categoryFacade.GetAllCategories().DistinctBy(c => c.Name);
                 AnsiConsole.Write(new Table()
                     .Title("Категории")
                     .AddColumn("Название")
                     .AddColumn("Тип"));
-                _categoryFacade.GetAllCategories().ToList().ForEach(c => AnsiConsole.WriteLine(c.Name));
+                uniqueCategories.ToList().ForEach(c => AnsiConsole.WriteLine($"{c.Name}, {c.Type}"));
                 AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
                 Console.ReadLine();
                 break;
@@ -148,10 +164,18 @@ public class Menu
         switch (choice)
         {
             case "Добавить операцию":
+                var accounts = _bankAccountFacade.GetAllBankAccounts();
+                if (!accounts.Any())
+                {
+                    AnsiConsole.MarkupLine("[red]Нет операций для удаления![/]");
+                    AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+                    Console.ReadLine();
+                    return;
+                }
                 var opType = AnsiConsole.Prompt(new SelectionPrompt<OperationType>()
                     .Title("Выберите тип операции:")
                     .AddChoices(OperationType.Enrollments, OperationType.Expenses));
-                var accounts = _bankAccountFacade.GetAllBankAccounts();
+                
                 var accountName = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Выберите счет:")
@@ -166,9 +190,36 @@ public class Menu
                 CreateOperationCommand createOperationCommand = new(_operationFacade);
                 createOperationCommand.Create(opType, account.Id, amount, DateTime.Now, description,
                     categoryName, categoryType);
-                _timedCommandDecorator.SetCommand(createOperationCommand);
-                _timedCommandDecorator.Execute();
+                TimedCommandDecorator.SetCommand(createOperationCommand);
+                TimedCommandDecorator.Execute();
                 AnsiConsole.MarkupLine("[green]Операция добавлена![/]");
+                AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+                Console.ReadLine();
+                break;
+            
+            case "Удалить операцию":
+                var operations = _operationFacade.GetAllOperations();
+                if (!operations.Any())
+                {
+                    AnsiConsole.MarkupLine("[red]Нет операций для удаления![/]");
+                    AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+                    Console.ReadLine();
+                    return;
+                }
+                accounts = _bankAccountFacade.GetAllBankAccounts();
+                accountName = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Выберите счет:")
+                        .AddChoices(accounts.Select(t => t.Name)));
+                account = _bankAccountFacade.GetBankAccount(accountName);
+                var operation = AnsiConsole.Prompt(
+                    new SelectionPrompt<Operation>()
+                        .Title("Выберите операцию для удаления:")
+                        .AddChoices(operations.Where(t => t.BankAccountId == account.Id).ToList()));
+                _operationFacade.DeleteOperation(operation);
+                AnsiConsole.MarkupLine("[red]Операция удалена![/]");
+                AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+                Console.ReadLine();
                 break;
             case "Список операций":
                 AnsiConsole.Write(new Table()
@@ -186,6 +237,13 @@ public class Menu
     private static void ShowAnalytics()
     {
         var accounts = _bankAccountFacade.GetAllBankAccounts();
+        if (!accounts.Any())
+        {
+            AnsiConsole.MarkupLine("[red]Нет данных для показа аналитики![/]");
+            AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+            Console.ReadLine();
+            return;
+        }
         var accountName = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Выберите счет:")
@@ -265,6 +323,8 @@ public class Menu
         }
         Exporter.ExportAll(_bankAccountFacade.GetAllBankAccounts(), _categoryFacade.GetAllCategories(), _operationFacade.GetAllOperations());
         AnsiConsole.MarkupLine($"[green]Данные экспортированы в {path}![/]");
+        AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+        Console.ReadLine();
     }
 
     private static void ImportData()
@@ -289,13 +349,10 @@ public class Menu
         var format = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Выберите формат импорта:")
-                .AddChoices("CSV","JSON", "YAML"));
+                .AddChoices("JSON", "YAML"));
         
         switch (format)
         {
-            case "CSV":
-                ImportCsv(accountPath,categoryPath,operationPath);
-                break;
             case "JSON":
                 ImportJson(accountPath,categoryPath,operationPath);
                 break;
@@ -305,31 +362,11 @@ public class Menu
         }
         
         AnsiConsole.MarkupLine("[green]Данные успешно импортированы![/]");
+        AnsiConsole.MarkupLine("[gray](Нажмите Enter, чтобы продолжить)[/]");
+        Console.ReadLine();
     }
     
 
-
-    private static void ImportCsv(string accountPath, string categoryPath, string operationPath)
-    {
-        CsvImporter<BankAccount> csvBankAccountImporter = new();
-        var bankAccounts = csvBankAccountImporter.ImportData(accountPath);
-        foreach (var account in bankAccounts)
-        {
-            _bankAccountFacade.CreateBankAccount(account.Name);
-        }
-        CsvImporter<Category> csvCategoryImporter = new();
-        var categories = csvCategoryImporter.ImportData(categoryPath);
-        foreach (var category in categories)
-        {
-            _categoryFacade.CreateCategory(category.Name, category.Type);
-        }
-        CsvImporter<Operation> csvOperationImporter = new();
-        var operations = csvOperationImporter.ImportData(operationPath);
-        foreach (var operation in operations)
-        {
-            _operationFacade.CreateOperation(operation.Type, operation.BankAccountId, operation.Amount,  operation.Date, operation.Description, operation.Category.Name, operation.Category.Type);
-        }
-    }
     
 
     private static void ImportJson(string accountPath, string categoryPath, string operationPath) 

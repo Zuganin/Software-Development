@@ -17,6 +17,7 @@ public class AnalysisFacade : IAnalysis
         var operations = _operationRepository.GetOperationsByDateAndAccountId(account.Id, start, end);
         var enrollment = operations.Where(o => o.Type == OperationType.Enrollments).Sum(o => o.Amount);
         var expense = operations.Where(o => o.Type == OperationType.Expenses).Sum(o => o.Amount);
+        account.UpdateBalance(enrollment - expense);
         return enrollment - expense;
     }
 

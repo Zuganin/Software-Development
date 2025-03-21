@@ -7,11 +7,13 @@ namespace HSE_BANK.Domain_Models;
 public class Category
 {
     [Name ("Id")]
-    public Guid Id { get; private set; }
+    public Guid Id { get;  set; }
     [Name("Name")]
-    public string Name { get; private set; }
+    public string Name { get;  set; }
     [Name("Type")]
-    public CategoryType Type { get; private set; }
+    public CategoryType Type { get;  set; }
+    
+    public Category() {}
     
     public Category( string name, CategoryType type)
     {

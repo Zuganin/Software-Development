@@ -5,11 +5,13 @@ namespace HSE_BANK.Domain_Models;
 public class BankAccount
 {
     [Name("Id")]
-    public Guid Id { get; private set; }
+    public Guid Id { get;  set; }
     [Name("Name")]
-    public string Name { get; private set; }
+    public string Name { get;  set; }
     [Name("Balance")]
-    public decimal Balance { get; private set; }
+    public decimal Balance { get;  set; }
+    
+    public BankAccount() {}
     public BankAccount(string name, decimal balance)
     {
         Id = Guid.NewGuid();
