@@ -5,5 +5,5 @@ namespace mini_hw_2.Application.Interfaces;
 
 public interface IAnimalTransferService
 {
-    public void TransferAnimal(Animal animal, Enclosure NewEnclosure);
+    public Task TransferAnimal(Animal animal, Enclosure NewEnclosure);
 }
