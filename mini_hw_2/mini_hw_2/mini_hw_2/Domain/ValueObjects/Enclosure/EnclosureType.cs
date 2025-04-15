@@ -1,6 +1,6 @@
 namespace mini_hw_2.Domain.Entities;
 
-public enum EnclousureType
+public enum EnclosureType
 {
     ForHerbivores = 0,
     ForPredators= 1,

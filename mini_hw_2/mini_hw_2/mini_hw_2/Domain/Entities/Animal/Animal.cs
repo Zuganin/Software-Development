@@ -9,14 +9,14 @@ public class Animal
     public Gender Gender { get; private set; }
     
     public FavoriteFood FavoriteFood { get; private set; } // ValueObject
-    public EnclousureType EnclosureType { get; private set; } // ValueObject
+    public EnclosureType EnclosureType { get; private set; } // ValueObject
     
     public HealtStatus HealtStatus { get; private set; } // ValueObject
     public NutritionStatus NutritionStatus { get; private set; } // ValueObject
     public Guid EnclosureId { get; private set; } 
     public DateTime LastFedTime { get; private set; }  // ValueObject
 
-    public Animal(string name, Gender gender, Species species, EnclousureType enclosureType, Guid enclosureId)
+    public Animal(string name, Gender gender, Species species, EnclosureType enclosureType, Guid enclosureId)
     {
         Id = Guid.NewGuid();
         HealtStatus = HealtStatus.Healthy;
