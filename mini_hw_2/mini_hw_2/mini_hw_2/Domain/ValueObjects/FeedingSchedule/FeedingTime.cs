@@ -1,4 +1,4 @@
-namespace mini_hw_2.Domain.Entities.FeedingSchedule;
+namespace mini_hw_2.Domain.ValueObjects.FeedingSchedule;
 
 public record FeedingTime
 {
@@ -6,8 +6,6 @@ public record FeedingTime
 
     public FeedingTime(DateTime value)
     {
-        if (value < DateTime.Now)
-            throw new ArgumentException("Время кормления не может быть в прошлом");
         Value = value;
     }
 

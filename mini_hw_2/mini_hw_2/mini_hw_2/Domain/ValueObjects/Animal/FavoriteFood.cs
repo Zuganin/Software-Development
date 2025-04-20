@@ -5,21 +5,13 @@ public class FavoriteFood
     Food Food { get; set; }
     public  FavoriteFood(Species species)
     {
-        if (species == Species.Herbivores)
+        Food = species switch
         {
-            Food = Food.Grass;
-        }
-        else if (species == Species.Predators)
-        {
-            Food = Food.Meat;
-        }
-        else if (species == Species.Birds)
-        {
-            Food = Food.Insects;
-        }
-        else if (species == Species.Fish)
-        {
-            Food = Food.Fishfood;
-        }
+            Species.Herbivores => Food.Grass,
+            Species.Predators => Food.Meat,
+            Species.Birds     => Food.Insects,
+            Species.Fish      => Food.Fishfood,
+            _ => throw new ArgumentOutOfRangeException(nameof(species), "Неизвестный вид животного")
+        };
     }
 }

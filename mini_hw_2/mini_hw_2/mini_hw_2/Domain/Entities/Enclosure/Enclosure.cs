@@ -8,8 +8,8 @@ public class Enclosure
     public SquareMeters Size { get; private set; }
     public int MaxCapacity { get; private set; }
 
-    private readonly List<Animal> _animals = new();
-    public IReadOnlyCollection<Animal> Animals => _animals.AsReadOnly();
+    private readonly List<Animal.Animal> _animals = new();
+    public IReadOnlyCollection<Animal.Animal> Animals => _animals.AsReadOnly();
 
     public Enclosure(Guid id, EnclosureType type, SquareMeters size, int maxCapacity)
     {
@@ -19,7 +19,7 @@ public class Enclosure
         MaxCapacity = maxCapacity;
     }
 
-    public void AddAnimal(Animal animal)
+    public void AddAnimal(Animal.Animal animal)
     {
         if (_animals.Count >= MaxCapacity)
             throw new InvalidOperationException("Вольер переполнен");
@@ -27,7 +27,7 @@ public class Enclosure
         _animals.Add(animal);
     }
 
-    public void RemoveAnimal(Animal animal)
+    public void RemoveAnimal(Animal.Animal animal)
     {
         if (!_animals.Remove(animal))
             throw new InvalidOperationException("Животное не найдено в вольере");

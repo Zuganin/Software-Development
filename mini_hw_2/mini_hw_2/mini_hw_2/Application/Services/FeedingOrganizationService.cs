@@ -1,6 +1,7 @@
 using mini_hw_2.Application.Interfaces;
 using mini_hw_2.Domain.Entities.FeedingSchedule;
 using mini_hw_2.Domain.Events;
+using mini_hw_2.Domain.ValueObjects.FeedingSchedule;
 
 namespace mini_hw_2.Application.Services;
 
