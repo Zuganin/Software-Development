@@ -6,7 +6,7 @@ using FileStoringService.Application.Interfaces;
 namespace FileStoringService.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class FilesController : ControllerBase
 {
     private readonly IFileStoringService _service;
@@ -18,8 +18,11 @@ public class FilesController : ControllerBase
 
     // POST api/files
     [HttpPost]
-    public async Task<IActionResult> Upload([FromForm] IFormFile file, CancellationToken ct)
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Upload([FromForm] FileUploadDto dto, CancellationToken ct)
     {
+        var file = dto.File;
+
         if (file == null || file.Length == 0)
             return BadRequest("No file uploaded.");
 
@@ -29,9 +32,11 @@ public class FilesController : ControllerBase
             await file.CopyToAsync(stream, ct);
         }
 
-        var dto = await _service.SaveFileAsync(tempPath, ct);
-        return CreatedAtAction(nameof(GetMetadata), new { id = dto.Id }, dto);
+        var resultDto = await _service.SaveFileAsync(tempPath, ct);
+        return CreatedAtAction(nameof(GetMetadata), new { id = resultDto.Id }, resultDto);
     }
+
+
 
     // GET api/files
     [HttpGet]

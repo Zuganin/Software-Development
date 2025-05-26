@@ -1,5 +1,4 @@
 ﻿
-// File: Program.cs
 
 using FileStoringService.Application.Interfaces;
 using FileStoringService.Infrastructure;
@@ -8,12 +7,14 @@ using FileStoringService.Infrastructure.Data;
 using FileStoringService.Infrastructure.Repositories;
 using FileStoringService.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Filters;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("FileStorageDb")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. Infrastructure
 builder.Services.AddScoped<IFileRepository, EfFileRepository>();
@@ -24,7 +25,15 @@ builder.Services.AddScoped<IFileStoringService, FileStorageService>();
 // 3. Controllers & Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "FileStoringService API",
+        Version = "v1",
+        Description = "Сервис для хранения файлов"
+    });
+});
 
 var app = builder.Build();
 
@@ -35,11 +44,9 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 app.MapControllers();
