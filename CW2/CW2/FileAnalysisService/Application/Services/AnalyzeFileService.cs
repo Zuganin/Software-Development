@@ -14,20 +14,17 @@ public class AnalyzeFileService : IAnalyzeFileService
     private readonly IFileStoringService _fileStorage;
     private readonly IWordCloudGenerator _wordCloudGen;
     private readonly ILogger<AnalyzeFileService> _logger;
-    private readonly HttpClient _httpClient;
-
+    
     public AnalyzeFileService(
         IFileAnalysisRepository analysisRepo,
         IFileStoringService fileStorage,
         IWordCloudGenerator wordCloudGen,
-        ILogger<AnalyzeFileService> logger,
-        HttpClient httpClient)
+        ILogger<AnalyzeFileService> logger)
     {
         _analysisRepo = analysisRepo;
         _fileStorage = fileStorage;
         _wordCloudGen = wordCloudGen;
         _logger = logger;
-        _httpClient = httpClient;
     }
 
     public async Task<AnalyzeFileResponse> AnalyzeAsync(

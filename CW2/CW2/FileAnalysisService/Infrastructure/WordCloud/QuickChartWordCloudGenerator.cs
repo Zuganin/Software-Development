@@ -21,7 +21,13 @@ public class QuickChartWordCloudGenerator : IWordCloudGenerator
 
     public async Task<string> GenerateWordCloudAsync(string text, string savePath)
     {
-        using var httpClient = new HttpClient();
+        var directory = Path.GetDirectoryName(savePath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        using var httpClient = _http;
         var payload = new
         {
             text = text,
@@ -45,7 +51,7 @@ public class QuickChartWordCloudGenerator : IWordCloudGenerator
         var json = JsonSerializer.Serialize(payload);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await httpClient.PostAsync("https://quickchart.io/wordcloud", content);
+        var response = await httpClient.PostAsync(_baseUrl, content);
 
         if (!response.IsSuccessStatusCode)
         {

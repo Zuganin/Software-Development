@@ -8,6 +8,7 @@ using FileAnalysisService.Application.Services;
 using FileAnalysisService.Domain.Entities;
 using FileAnalysisService.Domain.Interfaces;
 using FileStoringService.Application.Interfaces;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -18,12 +19,17 @@ namespace FileAnalysisTest.Application.Services
         private readonly Mock<IFileAnalysisRepository> _repoMock = new();
         private readonly Mock<IFileStoringService> _storageMock = new();
         private readonly Mock<IWordCloudGenerator> _cloudGenMock = new();
+        private readonly Mock<ILogger<AnalyzeFileService>> _loggerMock = new();
 
         private readonly AnalyzeFileService _service;
 
         public AnalyzeFileServiceTests()
         {
-            _service = new AnalyzeFileService(_repoMock.Object, _storageMock.Object, _cloudGenMock.Object);
+            _service = new AnalyzeFileService(
+                _repoMock.Object, 
+                _storageMock.Object, 
+                _cloudGenMock.Object, 
+                _loggerMock.Object);
         }
 
         [Fact]
