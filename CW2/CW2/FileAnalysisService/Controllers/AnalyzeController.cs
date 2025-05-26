@@ -6,17 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace FileAnalysisService.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/analyze")]
 public class AnalyzeController : ControllerBase
 {
     private readonly IAnalyzeFileService _service;
+    
 
     public AnalyzeController(IAnalyzeFileService service)
     {
         _service = service;
     }
 
-    [HttpGet("{fileId:guid}")]
+    [HttpGet]
     public async Task<IActionResult> GetAsync(Guid fileId, CancellationToken ct)
     {
         try
@@ -27,6 +28,28 @@ public class AnalyzeController : ControllerBase
         catch (FileNotFoundException)
         {
             return NotFound();
+        }
+    }
+    // GET api/analyze/wordcloud/{fileId}
+    [HttpGet("wordcloud/{fileId}")]
+    public async Task<IActionResult> DownloadWordCloud(Guid fileId)
+    {
+        try
+        {
+            var (content, fileName) = await _service.DownloadWordCloudAsync(fileId);
+
+            // Возвращаем файл как response с типом image/png
+            return File(content, "image/png", fileName);
+        }
+        catch (FileNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+            // Логируем ошибку
+            // _logger.LogError(ex, "Error downloading word cloud");
+            return StatusCode(500, "Internal server error");
         }
     }
 }

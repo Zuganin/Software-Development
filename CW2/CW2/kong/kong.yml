@@ -8,7 +8,8 @@ services:
       - name: file-storage-api
         paths:
           - /api/files
-        strip_path: false
+        strip_path: true
+
       - name: file-storage-swagger
         paths:
           - /api/files/swagger
@@ -20,7 +21,8 @@ services:
       - name: file-analysis-api
         paths:
           - /api/analyze
-        strip_path: false
+        strip_path: true
+
       - name: file-analysis-swagger
         paths:
           - /api/analyze/swagger

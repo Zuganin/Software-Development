@@ -25,7 +25,7 @@ public class FileStorageHttpClient : IFileStoringService
 
     public async Task<(byte[] Content, string Name)> GetFileAsync(Guid id, CancellationToken ct = default)
     {
-        var response = await _httpClient.GetAsync($"/{id}", ct);
+        var response = await _httpClient.GetAsync($"/api/files/{id}", ct);
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             throw new FileNotFoundException();
 

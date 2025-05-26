@@ -21,39 +21,40 @@ public class QuickChartWordCloudGenerator : IWordCloudGenerator
 
     public async Task<string> GenerateWordCloudAsync(string text, string savePath)
     {
-        // разбиваем текст на слова и считаем частоты
-        var words = text
-            .Split(new[] { ' ', '\r', '\n', '\t', ',', '.', ';', ':', '-', '_' }, StringSplitOptions.RemoveEmptyEntries)
-            .GroupBy(w => w.ToLowerInvariant())
-            .Select(g => new { text = g.Key, weight = g.Count() })
-            .ToArray();
-
-        // формируем payload QuickChart
+        using var httpClient = new HttpClient();
         var payload = new
         {
+            text = text,
             format = "png",
-            width = 500,
-            height = 500,
+            width = 800,
+            height = 600,
             fontFamily = "Arial",
-            // слова передаются в args.words
-            words = words
+            fontWeight = "bold",
+            backgroundColor = "#ffffff",
+            colors = new[] { "#1f77b4", "#ff7f0e", "#2ca02c" },
+            fontScale = 15,
+            scale = "linear",
+            removeStopwords = true,
+            minWordLength = 4,
+            maxNumWords = 100,
+            rotation = 0,
+            padding = 5,
+            language = "en"
         };
 
-        var json = JsonSerializer.Serialize(new { chart = new { type = "wordCloud", data = new { words }, options = payload } });
+        var json = JsonSerializer.Serialize(payload);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        // HTTP POST
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _http.PostAsync(_baseUrl, content);
-        response.EnsureSuccessStatusCode();
+        var response = await httpClient.PostAsync("https://quickchart.io/wordcloud", content);
 
-        // сохраняем PNG
-        await using var stream = await response.Content.ReadAsStreamAsync();
-        var dir = Path.GetDirectoryName(savePath)!;
-        if (!Directory.Exists(dir))
-            Directory.CreateDirectory(dir);
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"QuickChart error: {response.StatusCode}, {error}");
+        }
 
-        await using var fileStream = File.Create(savePath);
-        await stream.CopyToAsync(fileStream);
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        await File.WriteAllBytesAsync(savePath, bytes);
 
         return savePath;
     }

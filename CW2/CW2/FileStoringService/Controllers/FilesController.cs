@@ -6,7 +6,7 @@ using FileStoringService.Application.Interfaces;
 namespace FileStoringService.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/files")]
 public class FilesController : ControllerBase
 {
     private readonly IFileStoringService _service;

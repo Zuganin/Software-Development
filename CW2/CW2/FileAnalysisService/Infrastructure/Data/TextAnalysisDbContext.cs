@@ -16,6 +16,7 @@ public class TextAnalysisDbContext : DbContext
             entity.ToTable("file_analysis_results");
 
             entity.HasKey(e => e.FileId);
+
             entity.Property(e => e.FileId)
                 .HasColumnName("file_id")
                 .IsRequired();
@@ -24,12 +25,24 @@ public class TextAnalysisDbContext : DbContext
                 .HasColumnName("file_name")
                 .IsRequired();
 
-            entity.Property(e => e.Location)
-                .HasColumnName("location")
+            entity.Property(e => e.ParagraphCount)
+                .HasColumnName("paragraph_count")
+                .IsRequired();
+
+            entity.Property(e => e.WordCount)
+                .HasColumnName("word_count")
+                .IsRequired();
+
+            entity.Property(e => e.CharacterCount)
+                .HasColumnName("character_count")
                 .IsRequired();
 
             entity.Property(e => e.PlagiarismPercent)
                 .HasColumnName("plagiarism_percent")
+                .IsRequired();
+
+            entity.Property(e => e.Location)
+                .HasColumnName("location")
                 .IsRequired();
 
             entity.Property(e => e.AnalyzedAt)

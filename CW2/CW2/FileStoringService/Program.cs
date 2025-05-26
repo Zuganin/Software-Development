@@ -6,6 +6,7 @@ using FileStoringService.Domain.Interfaces;
 using FileStoringService.Infrastructure.Data;
 using FileStoringService.Infrastructure.Repositories;
 using FileStoringService.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.OpenApi.Models;
@@ -27,13 +28,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "File Storage API", Version = "v1" });
+
+    // Ограничение на свои контроллеры
+    c.DocInclusionPredicate((docName, apiDesc) =>
     {
-        Title = "FileStoringService API",
-        Version = "v1",
-        Description = "Сервис для хранения файлов"
+        if (apiDesc.ActionDescriptor is not ControllerActionDescriptor descriptor)
+            return false;
+
+        return descriptor.ControllerTypeInfo.Namespace?.Contains("FileStoringService") == true;
     });
+
+    c.AddServer(new OpenApiServer { Url = "/api/files" });
 });
+
+
 
 var app = builder.Build();
 
@@ -44,8 +53,16 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwagger(c =>
+{
+    c.RouteTemplate = "api/files/swagger/{documentName}/swagger.json";
+});
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/api/files/swagger/v1/swagger.json", "File Storage API");
+    c.RoutePrefix = "api/files/swagger";
+});
+
 
 
 app.UseHttpsRedirection();

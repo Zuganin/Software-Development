@@ -35,4 +35,5 @@ RUN dotnet publish FileAnalysisService/FileAnalysisService.csproj \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN mkdir -p wwwroot
 ENTRYPOINT ["dotnet", "FileAnalysisService.dll"]
