@@ -1,16 +1,17 @@
 using FileAnalysisService.Application.DTOs;
+using FileAnalysisService.Application.Interfaces;
 using FileAnalysisService.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FileAnalysisService.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class AnalyzeController : ControllerBase
 {
-    private readonly AnalyzeFileService _service;
+    private readonly IAnalyzeFileService _service;
 
-    public AnalyzeController(AnalyzeFileService service)
+    public AnalyzeController(IAnalyzeFileService service)
     {
         _service = service;
     }

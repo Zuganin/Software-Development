@@ -1,12 +1,13 @@
 using System.Text;
 using FileAnalysisService.Application.DTOs;
+using FileAnalysisService.Application.Interfaces;
 using FileAnalysisService.Domain.Entities;
 using FileAnalysisService.Domain.Interfaces;
 using FileStoringService.Application.Interfaces;
 
 namespace FileAnalysisService.Application.Services;
 
-public class AnalyzeFileService
+public class AnalyzeFileService : IAnalyzeFileService
 {
     private readonly IFileAnalysisRepository _analysisRepo;
     private readonly IFileStoringService _fileStorage;
@@ -26,7 +27,7 @@ public class AnalyzeFileService
         AnalyzeFileRequest request,
         CancellationToken cancellationToken = default)
     {
-        // 1) Проверяем, не проанализирован ли файл ранее
+        //  Проверяем, не проанализирован ли файл ранее
         var existing = await _analysisRepo.GetByFileIdAsync(request.FileId);
         if (existing is not null)
         {
@@ -38,7 +39,7 @@ public class AnalyzeFileService
             };
         }
 
-        // 2) Получаем содержимое и имя файла из FileStoringService
+        //  Получаем содержимое и имя файла из FileStoringService
         (byte[] contentBytes, string fileName) fileData;
         try
         {
@@ -49,7 +50,7 @@ public class AnalyzeFileService
             throw new FileNotFoundException($"File with ID {request.FileId} was not found in storage.");
         }
 
-        // 3) Декодируем текст (UTF-8)
+        //  Декодируем текст (UTF-8)
         var text = Encoding.UTF8.GetString(fileData.contentBytes);
 
         // 4) Генерируем облако слов и сохраняем PNG
@@ -60,11 +61,11 @@ public class AnalyzeFileService
         var cloudFilePath = Path.Combine(cloudFolder, cloudFileName);
         var savedCloudPath = await _wordCloudGen.GenerateWordCloudAsync(text, cloudFilePath);
 
-        // 5) Считаем случайный процент антиплагиата (0–60%)
+        //  Считаем случайный процент антиплагиата (0–60%)
         var random = new Random();
         var percent = random.Next(0, 61);
 
-        // 6) Сохраняем результат в базу
+        //  Сохраняем результат в базу
         var result = new FileAnalysisResult
         {
             FileId = request.FileId,
@@ -75,7 +76,7 @@ public class AnalyzeFileService
         };
         await _analysisRepo.SaveAsync(result);
 
-        // 7) Формируем ответ
+        //  Формируем ответ
         return new AnalyzeFileResponse
         {
             FileId = result.FileId,

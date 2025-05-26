@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: FileStoringService/Dockerfile
     environment:
-      ConnectionStrings__FileStorageDb: "Host=postgres-file;Port=5432;Database=filestorage;Username=postgres;Password=postgres"
+      ConnectionStrings__DefaultConnection: "Host=postgres-file;Port=5432;Database=filestorage;Username=postgres;Password=postgres"
     ports:
       - "8080:80"      # expose FileStoringService on port 8080
     depends_on:
@@ -29,15 +29,15 @@ services:
     volumes:
       - analysisdata:/var/lib/postgresql/data
 
-  textanalysis:
+  file-analysis:
     build:
       context: .
-      dockerfile: FileAnalisysService/Dockerfile
+      dockerfile: FileAnalysisService/Dockerfile
     environment:
-      ConnectionStrings__TextAnalysisDb: "Host=postgres-analysis;Port=5432;Database=fileanalysis;Username=postgres;Password=postgres"
-      FileStoringService__BaseUrl: "http://file-storage:8080/api/files"
+      ConnectionStrings__DefaultConnection: "Host=postgres-analysis;Port=5432;Database=fileanalysis;Username=postgres;Password=postgres"
+      FileStoringService__BaseUrl: "http://file-storage:80/files"
     ports:
-      - "8081:80"      # expose TextAnalysisService on port 8081
+      - "8081:80"     
     depends_on:
       - postgres-analysis
       - file-storage

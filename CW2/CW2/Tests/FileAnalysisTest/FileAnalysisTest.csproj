@@ -7,7 +7,6 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <RootNamespace>FileStoringService</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\FileStoringService\FileStoringService.csproj" />
+      <ProjectReference Include="..\..\FileAnalysisService\FileAnalysisService.csproj" />
     </ItemGroup>
 
 </Project>

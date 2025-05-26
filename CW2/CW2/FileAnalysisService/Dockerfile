@@ -1,8 +1,8 @@
 ﻿# 1) runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+ENV ASPNETCORE_URLS=http://+:80
+EXPOSE 80
 
 # 2) build image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -11,13 +11,13 @@ WORKDIR /src
 
 # Копируем оба сервиса сразу
 COPY FileStoringService/ FileStoringService/
-COPY FileAnalisysService/ FileAnalisysService/
+COPY FileAnalysisService/ FileAnalysisService/
 
 # Восстанавливаем зависимости анализа (MSBuild найдёт FileStoringService как проект-зависимость)
-RUN dotnet restore FileAnalisysService/FileAnalisysService.csproj
+RUN dotnet restore FileAnalysisService/FileAnalysisService.csproj
 
 # Собираем анализатор
-RUN dotnet build FileAnalisysService/FileAnalisysService.csproj \
+RUN dotnet build FileAnalysisService/FileAnalysisService.csproj \
     -c $BUILD_CONFIGURATION \
     -o /app/build
 
@@ -26,7 +26,7 @@ RUN rm FileStoringService/appsettings.json
 
 # 3) publish
 FROM build AS publish
-RUN dotnet publish FileAnalisysService/FileAnalisysService.csproj \
+RUN dotnet publish FileAnalysisService/FileAnalysisService.csproj \
     -c $BUILD_CONFIGURATION \
     -o /app/publish \
     /p:UseAppHost=false
@@ -35,4 +35,4 @@ RUN dotnet publish FileAnalisysService/FileAnalisysService.csproj \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "FileAnalisysService.dll"]
+ENTRYPOINT ["dotnet", "FileAnalysisService.dll"]

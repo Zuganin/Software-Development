@@ -1,19 +1,27 @@
 _format_version: "1.1"
 _transform: true
 
-# Сервисы (Upstreams)
 services:
   - name: file-storage
-    url: http://filestorage:80
+    url: http://file-storage:80
     routes:
-      - name: file-storage-route
+      - name: file-storage-api
         paths:
-          - /files
+          - /api/files
+        strip_path: false
+      - name: file-storage-swagger
+        paths:
+          - /api/files/swagger
+        strip_path: false
 
   - name: file-analysis
-    url: http://fileanalysis:80
+    url: http://file-analysis:80
     routes:
-      - name: file-analysis-route
+      - name: file-analysis-api
         paths:
-          - /analyze
-
+          - /api/analyze
+        strip_path: false
+      - name: file-analysis-swagger
+        paths:
+          - /api/analyze/swagger
+        strip_path: false

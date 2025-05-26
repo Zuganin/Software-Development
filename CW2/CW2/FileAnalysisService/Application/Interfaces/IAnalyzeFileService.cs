@@ -1,6 +1,8 @@
+using FileAnalysisService.Application.DTOs;
+
 namespace FileAnalysisService.Application.Interfaces;
 
-public class IAnalyzeFileService
+public interface IAnalyzeFileService
 {
-    
+    Task<AnalyzeFileResponse> AnalyzeAsync(AnalyzeFileRequest request, CancellationToken cancellationToken = default);
 }
