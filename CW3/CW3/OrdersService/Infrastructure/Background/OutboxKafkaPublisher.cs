@@ -25,26 +25,34 @@ namespace OrdersService.Infrastructure.Background
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var config = new ProducerConfig { BootstrapServers = _bootstrapServers };
-            using var producer = new ProducerBuilder<string, string>(config).Build();
-
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scope = _serviceProvider.CreateScope();
-                var outboxRepo = scope.ServiceProvider.GetRequiredService<OutboxRepository>();
-                var events = await outboxRepo.GetUnprocessedAsync();
-                foreach (var evt in events)
+                try
                 {
-                    try
+                    var config = new ProducerConfig { BootstrapServers = _bootstrapServers };
+                    using var producer = new ProducerBuilder<string, string>(config).Build();
+
+                    using var scope = _serviceProvider.CreateScope();
+                    var outboxRepo = scope.ServiceProvider.GetRequiredService<OutboxRepository>();
+                    var events = await outboxRepo.GetUnprocessedAsync();
+                    foreach (var evt in events)
                     {
-                        await producer.ProduceAsync(_topic, new Message<string, string> { Key = evt.Id.ToString(), Value = evt.Payload }, stoppingToken);
-                        await outboxRepo.MarkProcessedAsync(evt);
-                        _logger.LogInformation($"Published event {evt.Id} to Kafka");
+                        try
+                        {
+                            await producer.ProduceAsync(_topic, new Message<string, string> { Key = evt.Id.ToString(), Value = evt.Payload }, stoppingToken);
+                            await outboxRepo.MarkProcessedAsync(evt);
+                            _logger.LogInformation($"Published event {evt.Id} to Kafka");
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Failed to publish event {evt.Id} to Kafka");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, $"Failed to publish event {evt.Id} to Kafka");
-                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Kafka producer error in OutboxKafkaPublisher. Will retry in 10s.");
+                    await Task.Delay(10000, stoppingToken);
                 }
                 await Task.Delay(2000, stoppingToken);
             }

@@ -26,67 +26,69 @@ namespace OrdersService.Infrastructure.Background
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("PaymentStatusKafkaConsumer started");
-            var config = new ConsumerConfig
-            {
-                BootstrapServers = _bootstrapServers,
-                GroupId = _groupId,
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = false
-            };
-
-            using var consumer = new ConsumerBuilder<string, string>(config).Build();
-            try
-            {
-                consumer.Subscribe(_topic);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Kafka subscribe error (topic: {_topic})");
-                await Task.Delay(5000, stoppingToken);
-            }
-
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    var cr = consumer.Consume(TimeSpan.FromSeconds(1));
-                    if (cr != null)
+                    var config = new ConsumerConfig
                     {
-                        var evt = JsonSerializer.Deserialize<PaymentStatusEvent>(cr.Message.Value);
-                        if (evt != null && (evt.Status == "finished" || evt.Status == "cancelled"))
+                        BootstrapServers = _bootstrapServers,
+                        GroupId = _groupId,
+                        AutoOffsetReset = AutoOffsetReset.Earliest,
+                        EnableAutoCommit = false
+                    };
+
+                    using var consumer = new ConsumerBuilder<string, string>(config).Build();
+                    try
+                    {
+                        consumer.Subscribe(_topic);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Kafka subscribe error (topic: {_topic})");
+                        await Task.Delay(5000, stoppingToken);
+                        continue;
+                    }
+
+                    while (!stoppingToken.IsCancellationRequested)
+                    {
+                        try
                         {
-                            using var scope = _serviceProvider.CreateScope();
-                            var orderRepo = scope.ServiceProvider.GetRequiredService<OrderRepository>();
-                            var order = await orderRepo.GetByIdAsync(evt.OrderId);
-                            if (order != null)
+                            var cr = consumer.Consume(TimeSpan.FromSeconds(1));
+                            if (cr != null)
                             {
-                                order.Status = evt.Status == "finished" ? OrderStatus.Finished : OrderStatus.Cancelled;
-                                await orderRepo.UpdateAsync(order);
-                                _logger.LogInformation($"Order {order.Id} status updated to {order.Status}");
-                            }
-                            else
-                            {
-                                _logger.LogWarning($"Order {evt.OrderId} not found for payment status event");
+                                var evt = JsonSerializer.Deserialize<PaymentStatusEvent>(cr.Message.Value);
+                                if (evt != null && (evt.Status == "finished" || evt.Status == "cancelled"))
+                                {
+                                    using var scope = _serviceProvider.CreateScope();
+                                    var orderRepo = scope.ServiceProvider.GetRequiredService<OrderRepository>();
+                                    var order = await orderRepo.GetByIdAsync(evt.OrderId);
+                                    if (order != null)
+                                    {
+                                        order.Status = evt.Status == "finished" ? OrderStatus.Finished : OrderStatus.Cancelled;
+                                        await orderRepo.UpdateAsync(order);
+                                        _logger.LogInformation($"Order {order.Id} status updated to {order.Status}");
+                                    }
+                                    else
+                                    {
+                                        _logger.LogWarning($"Order {evt.OrderId} not found for payment status event");
+                                    }
+                                }
+                                consumer.Commit(cr);
+                                _logger.LogInformation($"Consumed payment status event: {cr.Message.Value}");
                             }
                         }
-                        consumer.Commit(cr);
-                        _logger.LogInformation($"Consumed payment status event: {cr.Message.Value}");
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Error consuming or processing Kafka message");
+                            await Task.Delay(2000, stoppingToken);
+                        }
                     }
-                }
-                catch (ConsumeException ex) when (ex.Error.Reason.Contains("Unknown topic") || ex.Error.Reason.Contains("Unknown partition"))
-                {
-                    _logger.LogWarning($"Kafka topic not available: {ex.Error.Reason}. Retrying in 5s...");
-                    await Task.Delay(5000, stoppingToken);
-                }
-                catch (ConsumeException ex)
-                {
-                    _logger.LogError(ex, "Kafka consume error");
-                    await Task.Delay(1000, stoppingToken);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Ошибка обработки события оплаты из Kafka");
-                    await Task.Delay(1000, stoppingToken);
+                    _logger.LogError(ex, "Kafka consumer error in PaymentStatusKafkaConsumer. Will retry in 10s.");
+                    await Task.Delay(10000, stoppingToken);
                 }
             }
         }
