@@ -14,6 +14,19 @@ namespace OrdersService.Controllers
             _orderService = orderService;
         }
 
+        /// <summary>
+        /// Создать заказ.
+        /// </summary>
+        /// <param name="request">Данные заказа</param>
+        /// <response code="200">Заказ создан</response>
+        /// <response code="400">Некорректная сумма</response>
+        /// <example>
+        /// {
+        ///   "userId": "b1a7e7e2-1c2d-4b7a-9c1a-2e7e7e7e7e7",
+        ///   "amount": 500.0,
+        ///   "description": "Покупка товара"
+        /// }
+        /// </example>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateOrderRequest request)
         {
@@ -23,6 +36,21 @@ namespace OrdersService.Controllers
             return Ok(order);
         }
 
+        /// <summary>
+        /// Получить список всех заказов.
+        /// </summary>
+        /// <response code="200">Список заказов</response>
+        /// <example>
+        /// [
+        ///   {
+        ///     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        ///     "userId": "b1a7e7e2-1c2d-4b7a-9c1a-2e7e7e7e7e7",
+        ///     "amount": 500.0,
+        ///     "description": "Покупка товара",
+        ///     "status": 0
+        ///   }
+        /// ]
+        /// </example>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -30,6 +58,21 @@ namespace OrdersService.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// Получить заказ по идентификатору.
+        /// </summary>
+        /// <param name="id">ID заказа</param>
+        /// <response code="200">Данные заказа</response>
+        /// <response code="404">Заказ не найден</response>
+        /// <example>
+        /// {
+        ///   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        ///   "userId": "b1a7e7e2-1c2d-4b7a-9c1a-2e7e7e7e7e7e",
+        ///   "amount": 500.0,
+        ///   "description": "Покупка товара",
+        ///   "status": 1
+        /// }
+        /// </example>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {

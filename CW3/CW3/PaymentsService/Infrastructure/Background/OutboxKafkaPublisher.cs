@@ -24,7 +24,7 @@ namespace PaymentsService.Infrastructure.Background
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
-            _bootstrapServers = configuration["Kafka:BootstrapServers"] ?? "localhost:9092";
+            _bootstrapServers = Environment.GetEnvironmentVariable("KAFKA_BOOTSTRAP_SERVERS") ?? configuration["Kafka:BootstrapServers"] ?? "kafka:9092";
             _topic = configuration["Kafka:Topic"] ?? "payments-events";
         }
 

@@ -6,7 +6,6 @@ using OrdersService.Application.Services;
 using OrdersService.Infrastructure.Background;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://localhost:8081");
 
 
 // Подключение к Postgres
@@ -19,6 +18,7 @@ builder.Services.AddScoped<OrderRepository>();
 builder.Services.AddScoped<OutboxRepository>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddHostedService<OutboxKafkaPublisher>();
+builder.Services.AddHostedService<PaymentStatusKafkaConsumer>();
 
 // Controllers & Swagger
 builder.Services.AddControllers();
@@ -26,7 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-app.Urls.Add("http://0.0.0.0:80");
+
 // Автоматическое создание БД
 using (var scope = app.Services.CreateScope())
 {
@@ -40,4 +40,8 @@ app.UseSwaggerUI();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
+
+var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+logger.LogInformation("OrdersService ASP.NET app is starting and ready to accept requests.");
+
 app.Run();

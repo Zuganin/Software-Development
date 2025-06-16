@@ -18,19 +18,24 @@ builder.Services.AddDbContext<PaymentsDbContext>(options =>
 // 3. Регистрация репозитория и сервиса
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
+builder.Services.AddScoped<IInboxRepository, InboxRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>(provider =>
 {
     var accountRepo = provider.GetRequiredService<IAccountRepository>();
     var outboxRepo = provider.GetRequiredService<IOutboxRepository>();
     var dbContext = provider.GetRequiredService<PaymentsDbContext>();
-    return new AccountService(accountRepo, outboxRepo, dbContext);
+    var transactionRepo = provider.GetRequiredService<TransactionRepository>();
+    return new AccountService(accountRepo, outboxRepo, dbContext, transactionRepo);
 });
+builder.Services.AddScoped<TransactionRepository>();
+builder.Services.AddHostedService<OutboxKafkaPublisher>();
+builder.Services.AddHostedService<InboxEventProcessor>();
+builder.Services.AddHostedService<InboxKafkaConsumer>();
 
 // 4. Добавление контроллеров и Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHostedService<OutboxKafkaPublisher>();
 
 // 5. Постройка приложения
 var app = builder.Build();

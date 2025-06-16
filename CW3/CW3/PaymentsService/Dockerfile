@@ -11,6 +11,7 @@ RUN dotnet publish -c Release -o /app/publish
 
 # Stage 2
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
+RUN apt-get update && apt-get install -y libgdiplus libc6-dev
 WORKDIR /app
 COPY --from=build /app/publish .
 

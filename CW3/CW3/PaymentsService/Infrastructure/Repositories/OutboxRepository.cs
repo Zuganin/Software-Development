@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PaymentsService.Domain.Events;
-using PaymentsService.Domain.Model.Entities;
 using PaymentsService.Domain.Model.Interfaces;
 using PaymentsService.Infrastructure.DbContext;
 

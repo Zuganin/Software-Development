@@ -1,3 +1,5 @@
+using System;
+
 namespace PaymentsService.Domain.Events
 {
     public class OutboxEvent
