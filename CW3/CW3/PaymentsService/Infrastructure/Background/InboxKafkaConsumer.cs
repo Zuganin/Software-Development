@@ -1,13 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+
 using Confluent.Kafka;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using PaymentsService.Domain.Events;
 using PaymentsService.Domain.Model.Interfaces;
-using System.Text.Json;
+
 
 namespace PaymentsService.Infrastructure.Background
 {
@@ -51,9 +46,10 @@ namespace PaymentsService.Infrastructure.Background
             {
                 try
                 {
-                    var cr = consumer.Consume(TimeSpan.FromSeconds(1)); // не блокируем поток
+                    var cr = consumer.Consume(TimeSpan.FromSeconds(1));
                     if (cr != null)
                     {
+                        _logger.LogInformation($"InboxKafkaConsumer: получено событие из Kafka: Key={cr.Message.Key}, Value={cr.Message.Value}");
                         using var scope = _serviceProvider.CreateScope();
                         var inboxRepository = scope.ServiceProvider.GetRequiredService<IInboxRepository>();
                         var inboxEvent = new InboxEvent
@@ -64,29 +60,8 @@ namespace PaymentsService.Infrastructure.Background
                             Status = "Pending",
                             ReceivedAt = DateTime.UtcNow
                         };
-                        var accountService = scope.ServiceProvider.GetRequiredService<PaymentsService.Application.Services.AccountService>();
-                        var orderEvent = JsonSerializer.Deserialize<OrderCreatedEvent>(cr.Message.Value);
-                        string idempotencyKey = orderEvent?.Id.ToString() ?? inboxEvent.Id.ToString();
-                        try
-                        {
-                            if (orderEvent != null)
-                            {
-                                await accountService.WithdrawAsync(orderEvent.UserId, orderEvent.Amount, idempotencyKey, stoppingToken);
-                                inboxEvent.Status = "Processed";
-                                inboxEvent.ProcessedAt = DateTime.UtcNow;
-                            }
-                            else
-                            {
-                                inboxEvent.Status = "Error";
-                                inboxEvent.Error = "Invalid event payload";
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            inboxEvent.Status = "Error";
-                            inboxEvent.Error = ex.Message;
-                        }
                         await inboxRepository.AddAsync(inboxEvent, stoppingToken);
+                        _logger.LogInformation($"InboxKafkaConsumer: событие сохранено в InboxEvents с Id={inboxEvent.Id}, статус Pending");
                         consumer.Commit(cr);
                     }
                 }

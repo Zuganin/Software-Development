@@ -35,10 +35,16 @@ namespace OrdersService.Infrastructure.Background
                     using var scope = _serviceProvider.CreateScope();
                     var outboxRepo = scope.ServiceProvider.GetRequiredService<OutboxRepository>();
                     var events = await outboxRepo.GetUnprocessedAsync();
+                    _logger.LogInformation($"OutboxKafkaPublisher: найдено {events.Count} событий для публикации");
+                    if (events.Count == 0)
+                    {
+                        _logger.LogDebug("OutboxKafkaPublisher: нет событий для публикации");
+                    }
                     foreach (var evt in events)
                     {
                         try
                         {
+                            _logger.LogInformation($"Публикация события в Kafka: Id={evt.Id}, Payload={evt.Payload}");
                             await producer.ProduceAsync(_topic, new Message<string, string> { Key = evt.Id.ToString(), Value = evt.Payload }, stoppingToken);
                             await outboxRepo.MarkProcessedAsync(evt);
                             _logger.LogInformation($"Published event {evt.Id} to Kafka");

@@ -28,6 +28,7 @@ builder.Services.AddScoped<IAccountService, AccountService>(provider =>
     return new AccountService(accountRepo, outboxRepo, dbContext, transactionRepo);
 });
 builder.Services.AddScoped<TransactionRepository>();
+builder.Services.AddScoped<AccountService>();
 builder.Services.AddHostedService<OutboxKafkaPublisher>();
 builder.Services.AddHostedService<InboxEventProcessor>();
 builder.Services.AddHostedService<InboxKafkaConsumer>();
@@ -47,8 +48,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PaymentsDbContext>();
-    db.Database.EnsureDeleted(); // каждый раз удаляет БД
-    db.Database.EnsureCreated(); // и создаёт заново по текущей модели
+    db.Database.EnsureDeleted();
+    db.Database.EnsureCreated();
 }
 
 // 6. Middleware
@@ -64,6 +65,10 @@ app.UseAuthorization();
 
 // 7. Маршрутизация
 app.MapControllers();
+
+// В конец файла (перед app.Run()) добавим лог для проверки запуска приложения
+var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Program");
+logger.LogInformation("PaymentsService запущен, HostedServices зарегистрированы (InboxKafkaConsumer, OutboxKafkaPublisher, InboxEventProcessor)");
 
 // 8. Запуск
 app.Run();

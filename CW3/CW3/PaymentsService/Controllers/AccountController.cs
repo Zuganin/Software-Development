@@ -21,7 +21,7 @@ public class AccountsController : ControllerBase
     /// <param name="ct">Токен отмены</param>
     /// <response code="201">Счёт создан</response>
     /// <response code="409">Счёт уже существует</response>
-    /// <example>"b1a7e7e2-1c2d-4b7a-9c1a-2e7e7e7e7e7e"</example>
+    /// <example>"b1a7e7e2-1c2d-4b7a-9c1a-2e7e7e7e7e"</example>
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Guid userId, CancellationToken ct)
     {
@@ -68,27 +68,13 @@ public class AccountsController : ControllerBase
     ///   "amount": 500.0
     /// }
     /// </example>
-    [HttpPost("withdraw")]
-    public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest dto, CancellationToken ct)
-    {
-        try
-        {
-            var balance = await _service.WithdrawAsync(dto.UserId, dto.Amount, ct);
-            return Ok(new { balance });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// Получить баланс пользователя.
-    /// </summary>
-    /// <param name="userId">ID пользователя</param>
-    /// <param name="ct">Токен отмены</param>
-    /// <response code="200">Текущий баланс</response>
-    /// <example>1000.0</example>
+    /// [HttpPost("withdraw")]
+    /// public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest dto, CancellationToken ct)
+    /// {
+    ///     var balance = await _service.WithdrawAsync(dto.UserId, dto.Amount, ct);
+    ///     return Ok(balance);
+    /// }
+    /// </example>
     [HttpGet("{userId}/balance")]
     public async Task<ActionResult<decimal>> GetBalance(Guid userId, CancellationToken ct)
     {
