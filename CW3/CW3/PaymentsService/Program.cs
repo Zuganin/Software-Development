@@ -35,7 +35,11 @@ builder.Services.AddHostedService<InboxKafkaConsumer>();
 // 4. Добавление контроллеров и Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "PaymentsService API", Version = "v1" });
+    options.AddServer(new Microsoft.OpenApi.Models.OpenApiServer { Url = "/payments" }); // только для Kong
+});
 
 // 5. Постройка приложения
 var app = builder.Build();
@@ -43,7 +47,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PaymentsDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.EnsureDeleted(); // каждый раз удаляет БД
+    db.Database.EnsureCreated(); // и создаёт заново по текущей модели
 }
 
 // 6. Middleware

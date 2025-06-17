@@ -23,7 +23,11 @@ builder.Services.AddHostedService<PaymentStatusKafkaConsumer>();
 // Controllers & Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "OrdersService API", Version = "v1" });
+    options.AddServer(new Microsoft.OpenApi.Models.OpenApiServer { Url = "/orders" }); // только для Kong
+});
 
 var app = builder.Build();
 
@@ -31,7 +35,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.EnsureDeleted(); // каждый раз удаляет БД
+    db.Database.EnsureCreated(); // и создаёт заново по текущей модели
 }
 
 app.UseSwagger();
