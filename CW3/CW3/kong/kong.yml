@@ -1,0 +1,16 @@
+_format_version: "3.0"
+services:
+  - name: orders-service
+    url: http://orders-service:80
+    routes:
+      - name: orders
+        paths:
+          - /orders
+        strip_path: true
+  - name: payments-service
+    url: http://payments-service:80
+    routes:
+      - name: payments
+        paths:
+          - /payments
+        strip_path: true
