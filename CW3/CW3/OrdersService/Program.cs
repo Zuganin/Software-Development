@@ -35,8 +35,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-    db.Database.EnsureDeleted(); // каждый раз удаляет БД
-    db.Database.EnsureCreated(); // и создаёт заново по текущей модели
+    db.Database.EnsureDeleted(); 
+    db.Database.EnsureCreated(); 
 }
 
 app.UseSwagger();

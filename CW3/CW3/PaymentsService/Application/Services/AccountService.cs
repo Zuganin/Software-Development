@@ -75,41 +75,6 @@ public class AccountService : IAccountService
         return await _transactionRepository.GetBalanceByAccountIdAsync(account.Id, cancellationToken);
     }
 
-    public async Task<decimal> внеWithdrawAsync(Guid userId, decimal amount, CancellationToken cancellationToken)
-    {
-        if (amount <= 0)
-            throw new InvalidOperationException("Amount to withdraw must be greater than zero");
-        using var tx = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
-        var account = await _repository.GetByUserIdAsync(userId, cancellationToken);
-        if (account == null)
-            throw new InvalidOperationException("Account not found for user");
-        var balance = await _transactionRepository.GetBalanceByAccountIdAsync(account.Id, cancellationToken);
-        if (balance == 0)
-            throw new InvalidOperationException("Account balance is zero, cannot withdraw");
-        if (balance < amount)
-            throw new InvalidOperationException("Insufficient funds");
-        account.Withdraw(amount);
-        await _repository.UpdateAsync(account, cancellationToken);
-        var transaction = new Transaction
-        {
-            Id = Guid.NewGuid(),
-            AccountId = account.Id,
-            Amount = -amount,
-            Type = "withdraw",
-            OccurredOn = DateTime.UtcNow
-        };
-        await _transactionRepository.AddAsync(transaction, cancellationToken);
-        var evt = new OutboxEvent
-        {
-            EventType = "AccountDebited",
-            Payload = System.Text.Json.JsonSerializer.Serialize(new { userId, amount }),
-            CorrelationId = userId.ToString()
-        };
-        await _outboxRepository.AddAsync(evt, cancellationToken);
-        await tx.CommitAsync(cancellationToken);
-        return await _transactionRepository.GetBalanceByAccountIdAsync(account.Id, cancellationToken);
-    }
-
     public async Task<decimal> WithdrawAsync(Guid userId, decimal amount, CancellationToken cancellationToken)
     {
         if (amount <= 0)
